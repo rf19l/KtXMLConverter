@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="TextAppearance.AppCompat.Headline">
+        <item name="android:textSize">@dimen/text_size_large</item>
+        <item name="android:textColor">@color/textColorPrimary</item>
+    </style>
+
+    <style name="TextAppearance.AppCompat.Subhead">
+        <item name="android:textSize">@dimen/text_size_medium</item>
+        <item name="android:textColor">@color/textColorSecondary</item>
+    </style>
+
+    <style name="TextAppearance.AppCompat.Body1">
+        <item name="android:textSize">@dimen/text_size_small</item>
+        <item name="android:textColor">@color/textColorPrimary</item>
+    </style>
+</resources>
