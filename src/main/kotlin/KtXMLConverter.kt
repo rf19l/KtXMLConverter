@@ -77,9 +77,13 @@ abstract class DimensTask : DefaultTask() {
                     element.getAttribute("name").replace("_([a-z])".toRegex()) { it.value[1].toUpperCase().toString() }
                 val valueAndUnit = element.textContent
                 val value = valueAndUnit.replace("dp|sp".toRegex(), "")
-                val unit = if (valueAndUnit.endsWith("dp")) "dp" else "sp"
+                val unit = when {
+                    valueAndUnit.endsWith("dp") -> ".dp"
+                    valueAndUnit.endsWith("sp") -> ".sp"
+                    else -> "f"
+                }
 
-                stringBuilder.append("    val $name = $value.$unit\n")
+                stringBuilder.append("    val $name = $value$unit\n")
             }
         }
 
@@ -176,14 +180,6 @@ abstract class StylesTask : DefaultTask() {
                     val itemName = item.attributes.getNamedItem("name").nodeValue
                     var itemValue = item.textContent.replace("@dimen/", "").replace("@color/", "")
                         .replace("_([a-z0-9])".toRegex()) { it.groupValues[1].toUpperCase() }.decapitalize()
-                    // Color mapping
-                    if (itemName == "android:textColor") {
-                        itemValue = when (itemValue) {
-                            "textColorPrimary" -> "colorPrimary"
-                            "textColorSecondary" -> "colorSecondary"
-                            else -> itemValue
-                        }
-                    }
                     properties[itemName] = itemValue
                 }
 

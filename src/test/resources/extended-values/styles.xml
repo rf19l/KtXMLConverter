@@ -1,0 +1,16 @@
+<resources>
+    <style name="MyStyle">
+        <item name="android:textColor">@color/textColorPrimary</item>
+        <item name="android:textSize">@dimen/font_size_large</item>
+        <item name="android:textStyle">bold</item>
+        <item name="lineHeight">@dimen/line_height_large</item>
+        <item name="android:letterSpacing">@dimen/letter_spacing_normal</item>
+    </style>
+    <style name="AnotherStyle">
+        <item name="android:textColor">@color/textColorSecondary</item>
+        <item name="android:textSize">@dimen/font_size_small</item>
+        <item name="android:textStyle">italic</item>
+        <item name="lineHeight">@dimen/line_height_small</item>
+        <item name="android:letterSpacing">@dimen/letter_spacing_large</item>
+    </style>
+</resources>

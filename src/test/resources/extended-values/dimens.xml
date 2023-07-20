@@ -1,0 +1,8 @@
+<resources>
+    <dimen name="font_size_large">18sp</dimen>
+    <dimen name="font_size_small">12sp</dimen>
+    <dimen name="line_height_large">24sp</dimen>
+    <dimen name="line_height_small">16sp</dimen>
+    <dimen name="letter_spacing_normal">0.025</dimen>
+    <dimen name="letter_spacing_large">0.05</dimen>
+</resources>

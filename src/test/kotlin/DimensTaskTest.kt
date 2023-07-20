@@ -61,6 +61,7 @@ class DimensTaskFunctionalTest {
                     <dimen name="text_size_small">12sp</dimen>
                     <dimen name="text_size_medium">16sp</dimen>
                     <dimen name="text_size_large">20sp</dimen>
+                    <dimen name="unitless_margin">10</dimen>
                 </resources>
 
             """.trimIndent()
@@ -85,6 +86,7 @@ class DimensTaskFunctionalTest {
         val textSizeSmall = 12.sp
         val textSizeMedium = 16.sp
         val textSizeLarge = 20.sp
+        val unitlessMargin = 10f
     }
 """.trimIndent()
 
@@ -94,4 +96,5 @@ class DimensTaskFunctionalTest {
         Assertions.assertEquals(expectedOutput, outputFile.readText().trim())
     }
 }
+
 

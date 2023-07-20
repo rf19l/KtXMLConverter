@@ -116,15 +116,15 @@ class StylesTaskTest {
     object ExampleStyles {
         val textAppearanceAppCompatHeadline = TextStyle(
             fontSize = ExampleDimens.textSizeLarge,
-            color = ExampleColors.colorPrimary,
+            color = ExampleColors.textColorPrimary,
         )
         val textAppearanceAppCompatSubhead = TextStyle(
             fontSize = ExampleDimens.textSizeMedium,
-            color = ExampleColors.colorSecondary,
+            color = ExampleColors.textColorSecondary,
         )
         val textAppearanceAppCompatBody1 = TextStyle(
             fontSize = ExampleDimens.textSizeSmall,
-            color = ExampleColors.colorPrimary,
+            color = ExampleColors.textColorPrimary,
         )
     }
 """.trimIndent()
@@ -134,6 +134,120 @@ class StylesTaskTest {
         Assertions.assertTrue(outputFile.exists())
         Assertions.assertEquals(expectedOutput, outputFile.readText().trim())
     }
+
+    @Test
+    fun `new styles task generates expected output`() {
+        // Set project name
+        val projectName = "NewExample"
+        val packageName = "com.org.newexample"
+
+        // Setup test project
+        // Write settings and build files
+        settingsFile.writeText("""
+        rootProject.name = "new-world"
+    """.trimIndent())
+
+        buildFile.writeText("""
+        plugins {
+            id("com.rf.foster.ktxml")
+        }
+        
+        ktXMLConverterExtension {
+            projectName.set("$projectName")
+            packageName.set("$packageName")
+        }
+    """.trimIndent())
+
+        // Write dimens.xml to the project directory
+        val dimensFile = File(resDir, "dimens.xml")
+        dimensFile.writeText(
+            """
+            <?xml version="1.0" encoding="UTF-8"?>
+            <resources>
+                <dimen name="font_size_large">18sp</dimen>
+                <dimen name="font_size_small">12sp</dimen>
+                <dimen name="line_height_large">24sp</dimen>
+                <dimen name="line_height_small">16sp</dimen>
+                <dimen name="letter_spacing_normal">0.025</dimen>
+                <dimen name="letter_spacing_large">0.05</dimen>
+            </resources>
+        """.trimIndent()
+        )
+
+        // Write colors.xml to the project directory
+        val colorsFile = File(resDir, "colors.xml")
+        colorsFile.writeText(
+            """
+        <?xml version="1.0" encoding="utf-8"?>
+        <resources>
+            <color name="textColorPrimary">#000000</color>
+            <color name="textColorSecondary">#808080</color>
+            <color name="colorAccent">#FF4081</color>
+            <color name="colorPrimary">#3F51B5</color>
+        </resources>
+    """.trimIndent()
+        )
+
+        // Write styles.xml to the project directory
+        val stylesFile = File(resDir, "styles.xml")
+        stylesFile.writeText(
+            """
+            <resources>
+                <style name="MyStyle">
+                    <item name="android:textColor">@color/textColorPrimary</item>
+                    <item name="android:textSize">@dimen/font_size_large</item>
+                    <item name="android:textStyle">bold</item>
+                    <item name="lineHeight">@dimen/line_height_large</item>
+                    <item name="android:letterSpacing">@dimen/letter_spacing_normal</item>
+                </style>
+                <style name="AnotherStyle">
+                    <item name="android:textColor">@color/textColorSecondary</item>
+                    <item name="android:textSize">@dimen/font_size_small</item>
+                    <item name="android:textStyle">italic</item>
+                    <item name="lineHeight">@dimen/line_height_small</item>
+                    <item name="android:letterSpacing">@dimen/letter_spacing_large</item>
+                </style>
+            </resources>
+
+        """.trimIndent()
+        )
+
+        // Run the tasks
+        GradleRunner.create().withProjectDir(testProjectDir).withArguments("dimensTask", "colorsTask", "stylesTask", "--stacktrace")
+            .withPluginClasspath().build()
+
+        // Check the output
+        val expectedOutput = """
+package com.org.newexample
+
+import androidx.compose.ui.text.TextStyle
+import com.org.newexample.NewExampleColors
+import com.org.newexample.NewExampleDimens
+
+object NewExampleStyles {
+    val myStyle = TextStyle(
+        fontSize = NewExampleDimens.fontSizeLarge,
+        fontWeight = FontWeight.Bold,
+        color = NewExampleColors.textColorPrimary,
+        lineHeight = NewExampleDimens.lineHeightLarge,
+        letterSpacing = NewExampleDimens.letterSpacingNormal,
+    )
+    val anotherStyle = TextStyle(
+        fontSize = NewExampleDimens.fontSizeSmall,
+        fontWeight = FontWeight.Italic,
+        color = NewExampleColors.textColorSecondary,
+        lineHeight = NewExampleDimens.lineHeightSmall,
+        letterSpacing = NewExampleDimens.letterSpacingLarge,
+    )
+}
+""".trimIndent()
+
+        val outputDir = File(testProjectDir, "build/generated/source/kapt/debug/com/org/newexample")
+        val outputFile = File(outputDir, "${projectName}Styles.kt")
+        Assertions.assertTrue(outputFile.exists())
+        Assertions.assertEquals(expectedOutput, outputFile.readText().trim())
+    }
+
 }
 
 
