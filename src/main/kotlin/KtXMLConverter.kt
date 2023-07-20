@@ -178,7 +178,7 @@ abstract class StylesTask : DefaultTask() {
                 for (j in 0 until items.length) {
                     val item = items.item(j)
                     val itemName = item.attributes.getNamedItem("name").nodeValue
-                    var itemValue = item.textContent.replace("@dimen/", "").replace("@color/", "")
+                    val itemValue = item.textContent.replace("@dimen/", "").replace("@color/", "")
                         .replace("_([a-z0-9])".toRegex()) { it.groupValues[1].toUpperCase() }.decapitalize()
                     properties[itemName] = itemValue
                 }
