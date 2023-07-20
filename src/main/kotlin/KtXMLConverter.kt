@@ -41,10 +41,6 @@ class KtXMLConverter : Plugin<Project> {
         val allTasks = project.tasks.register("convertResourceDir", ConvertResourceDirectoryTask::class.java) {
             this.dependsOn(dimensTask, colorsTask, stylesTask)
         }
-        // Make preBuild task depend on your task
-        project.tasks.named("preBuild").configure {
-            this.dependsOn(allTasks)
-        }
     }
 }
 
