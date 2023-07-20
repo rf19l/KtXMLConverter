@@ -4,7 +4,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 import java.io.File
-import java.nio.file.Path
 
 class StylesTaskTest {
 
@@ -36,10 +35,10 @@ class StylesTaskTest {
 
         buildFile.writeText("""
             plugins {
-                id("com.rf.foster")
+                id("com.rf.foster.ktxml")
             }
             
-            composeXmlResourceConverterExtension {
+            ktXMLConverterExtension {
                 projectName.set("$projectName")
                 packageName.set("$packageName")
             }
@@ -103,7 +102,7 @@ class StylesTaskTest {
         )
 
         // Run the tasks
-        val result = GradleRunner.create().withProjectDir(testProjectDir).withArguments("dimensTask", "colorsTask", "stylesTask", "--stacktrace")
+        GradleRunner.create().withProjectDir(testProjectDir).withArguments("dimensTask", "colorsTask", "stylesTask", "--stacktrace")
             .withPluginClasspath().build()
 
         // Check the output
@@ -132,7 +131,7 @@ class StylesTaskTest {
 
         val outputDir = File(testProjectDir, "build/generated/source/kapt/debug/com/org/example")
         val outputFile = File(outputDir, "${projectName}Styles.kt")
-        //Assertions.assertTrue(outputFile.exists())
+        Assertions.assertTrue(outputFile.exists())
         Assertions.assertEquals(expectedOutput, outputFile.readText().trim())
     }
 }

@@ -12,7 +12,6 @@ class DimensTaskFunctionalTest {
     lateinit var testProjectDir: File
     private lateinit var settingsFile: File
     private lateinit var buildFile: File
-    private val projectName = "Example"
     private val packageName = "com.org.example"
 
     @BeforeEach
@@ -27,7 +26,7 @@ class DimensTaskFunctionalTest {
         val projectDir = tempDir.toFile()
         val settingsFile = File(projectDir, "settings.gradle.kts")
         val buildFile = File(projectDir, "build.gradle.kts")
-        val srcDir = File(projectDir, "src/main/res/values")
+        File(projectDir, "src/main/res/values")
 
         // Set project name
         val projectName = "Example"
@@ -39,10 +38,10 @@ class DimensTaskFunctionalTest {
 
         buildFile.writeText("""
             plugins {
-                id("com.rf.foster")
+                id("com.rf.foster.ktxml")
             }
             
-            composeXmlResourceConverterExtension {
+            ktXMLConverterExtension {
                 projectName.set("$projectName")
                 packageName.set("com.org.example")
             }
@@ -68,7 +67,7 @@ class DimensTaskFunctionalTest {
         )
 
         // Run the dimens task
-        val result = GradleRunner.create().withProjectDir(testProjectDir).withArguments("dimensTask", "--stacktrace")
+        GradleRunner.create().withProjectDir(testProjectDir).withArguments("dimensTask", "--stacktrace")
             .withPluginClasspath().build()
 
         // Check the output

@@ -1,4 +1,4 @@
-package com.rf.foster
+package com.rf.foster.ktxml
 
 import org.gradle.api.DefaultTask
 import org.gradle.api.Plugin
@@ -7,22 +7,21 @@ import org.gradle.api.model.ObjectFactory
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
-import org.gradle.configurationcache.extensions.capitalized
 import org.w3c.dom.Element
 import org.w3c.dom.Node
 import java.io.File
 import javax.xml.parsers.DocumentBuilderFactory
 
-open class ComposeXmlResourceConverterExtension(objects: ObjectFactory) {
+open class KtXMLConverterExtension(objects: ObjectFactory) {
     val projectName: Property<String> = objects.property(String::class.java)
     val packageName: Property<String> = objects.property(String::class.java)
 }
 
 
-class ComposeXmlResourceConverter : Plugin<Project> {
+class KtXMLConverter : Plugin<Project> {
     override fun apply(project: Project) {
         val extension = project.extensions.create(
-            "composeXmlResourceConverterExtension", ComposeXmlResourceConverterExtension::class.java, project.objects
+            "ktXMLConverterExtension", KtXMLConverterExtension::class.java, project.objects
         )
 
         val dimensTask = project.tasks.create("dimensTask", DimensTask::class.java) {

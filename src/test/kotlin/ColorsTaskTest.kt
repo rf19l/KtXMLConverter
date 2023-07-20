@@ -26,13 +26,14 @@ class ColorsTaskTest {
 
         buildFile.writeText("""
             plugins {
-                id("com.rf.foster")
+                id("com.rf.foster.ktxml")
             }
             
-            composeXmlResourceConverterExtension {
+            ktXMLConverterExtension {
                 projectName.set("$projectName")
                 packageName.set("$packageName")
-            }
+            }  
+
         """.trimIndent())
 
         // Create source directory and color XML file

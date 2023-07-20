@@ -1,3 +1,3 @@
 
-rootProject.name = "ComposeXMLResourceConverter"
+rootProject.name = "KtXMLConverter"
 

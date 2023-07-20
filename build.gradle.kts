@@ -7,7 +7,7 @@ plugins {
     `kotlin-dsl`
 }
 
-group = "com.rf.foster"
+group = "com.rf.foster.ktxml"
 version = "1.0-SNAPSHOT"
 
 repositories {
@@ -24,7 +24,7 @@ gradlePlugin {
     plugins {
         create("$group") {
             id = "$group"
-            implementationClass = "com.rf.foster.ComposeXmlResourceConverter"
+            implementationClass = "com.rf.foster.ktxml.KtXMLConverter"
         }
     }
 }
