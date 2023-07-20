@@ -224,6 +224,8 @@ import androidx.compose.ui.text.TextStyle
 import com.org.newexample.NewExampleColors
 import com.org.newexample.NewExampleDimens
 
+import androidx.compose.ui.text.font.FontWeight
+
 object NewExampleStyles {
     val myStyle = TextStyle(
         fontSize = NewExampleDimens.fontSizeLarge,

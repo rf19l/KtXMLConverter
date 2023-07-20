@@ -68,12 +68,12 @@ class ColorsTaskTest {
     import androidx.compose.ui.graphics.Color
 
     object ${projectName}Colors {
-        val colorPrimary = Color(0x3F51B5)
-        val colorPrimaryDark = Color(0x303F9F)
-        val colorAccent = Color(0xFF4081)
-        val textColorPrimary = Color(0x212121)
-        val textColorSecondary = Color(0x757575)
-        val dividerColor = Color(0xBDBDBD)
+        val colorPrimary = Color(0xFF3F51B5)
+        val colorPrimaryDark = Color(0xFF303F9F)
+        val colorAccent = Color(0xFFFF4081)
+        val textColorPrimary = Color(0xFF212121)
+        val textColorSecondary = Color(0xFF757575)
+        val dividerColor = Color(0xFFBDBDBD)
     }
 """.trimIndent()
 

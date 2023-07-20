@@ -18,6 +18,7 @@ open class KtXMLConverterExtension(objects: ObjectFactory) {
 }
 
 
+// This is your main plugin class
 class KtXMLConverter : Plugin<Project> {
     override fun apply(project: Project) {
         val extension = project.extensions.create(
@@ -32,13 +33,26 @@ class KtXMLConverter : Plugin<Project> {
             this.projectName.set(extension.projectName)
             this.packageName.set(extension.packageName)
         }
-
         val stylesTask = project.tasks.create("stylesTask", StylesTask::class.java) {
             this.projectName.set(extension.projectName)
             this.packageName.set(extension.packageName)
         }
 
-        stylesTask.dependsOn(dimensTask, colorsTask)
+        val allTasks = project.tasks.register("convertResourceDir", ConvertResourceDirectoryTask::class.java) {
+            this.dependsOn(dimensTask, colorsTask, stylesTask)
+        }
+        // Make preBuild task depend on your task
+        project.tasks.named("preBuild").configure {
+            this.dependsOn(allTasks)
+        }
+    }
+}
+
+// This is your new task that runs all the tasks
+abstract class ConvertResourceDirectoryTask : DefaultTask() {
+    @TaskAction
+    fun convertResources() {
+        println("Running all XML conversion tasks")
     }
 }
 
@@ -53,6 +67,10 @@ abstract class DimensTask : DefaultTask() {
     @TaskAction
     fun convertDimensToKotlin() {
         val inputFile = project.file("src/main/res/values/dimens.xml")
+        if (!inputFile.exists()) {
+            println("WARNING: ${inputFile.absolutePath} does not exist.")
+            return
+        }
         val outputDir = File(project.buildDir, "generated/source/kapt/debug/${packageName.get().replace('.', '/')}")
         outputDir.mkdirs() // Ensure the directory exists
         val outputFile = File(outputDir, "${projectName.get()}Dimens.kt")
@@ -102,6 +120,10 @@ abstract class ColorsTask : DefaultTask() {
     @TaskAction
     fun convertColors() {
         val inputFile = File(project.projectDir, "src/main/res/values/colors.xml")
+        if (!inputFile.exists()) {
+            println("WARNING: ${inputFile.absolutePath} does not exist.")
+            return
+        }
         // Replace '.' with the file separator for the package name to create a file path
         val outputDir = File(project.buildDir, "generated/source/kapt/debug/${packageName.get().replace('.', '/')}")
         outputDir.mkdirs() // Ensure the directory exists
@@ -126,16 +148,19 @@ abstract class ColorsTask : DefaultTask() {
             if (node.nodeType == Node.ELEMENT_NODE) {
                 val element = node as Element
                 val name = element.getAttribute("name").replace(Regex("_\\w")) { it.value[1].toUpperCase().toString() }
-                val value = element.textContent
-                stringBuilder.append("    val $name = Color(0x${value.substring(1)})\n")
+                var value = "0x" + element.textContent.substring(1)
+                while (value.length < 10) {
+                    value = "0x" + "F" + value.substring(2)
+                }
+                stringBuilder.append("    val $name = Color($value)\n")
             }
         }
 
         stringBuilder.append("}\n")
         outputFile.writeText(stringBuilder.toString())
     }
-}
 
+}
 
 abstract class StylesTask : DefaultTask() {
     @get:Input
@@ -147,6 +172,10 @@ abstract class StylesTask : DefaultTask() {
     @TaskAction
     fun convertStylesToKotlin() {
         val inputFile = project.file("src/main/res/values/styles.xml")
+        if (!inputFile.exists()) {
+            println("WARNING: ${inputFile.absolutePath} does not exist.")
+            return
+        }
         val outputDir = project.file("build/generated/source/kapt/debug/${packageName.get().replace('.', '/')}")
         outputDir.mkdirs() // Ensure the directory exists
         val outputFile = File(outputDir, "${projectName.get()}Styles.kt")
@@ -162,6 +191,31 @@ abstract class StylesTask : DefaultTask() {
         stringBuilder.append("import androidx.compose.ui.text.TextStyle\n")
         stringBuilder.append("import ${packageName.get()}.${projectName.get()}Colors\n")
         stringBuilder.append("import ${packageName.get()}.${projectName.get()}Dimens\n\n")
+
+        var fontWeightImportNeeded = false
+
+        for (i in 0 until nodeList.length) {
+            val node = nodeList.item(i)
+            if (node.nodeType == Node.ELEMENT_NODE) {
+                val element = node as Element
+
+                // Parse each item
+                val items = element.getElementsByTagName("item")
+                val properties = mutableMapOf<String, String>()
+                for (j in 0 until items.length) {
+                    val item = items.item(j)
+                    val itemName = item.attributes.getNamedItem("name").nodeValue
+                    if (itemName == "android:textStyle") {
+                        fontWeightImportNeeded = true
+                    }
+                }
+            }
+        }
+
+        if (fontWeightImportNeeded) {
+            stringBuilder.append("import androidx.compose.ui.text.font.FontWeight\n\n")
+        }
+
         stringBuilder.append("object ${projectName.get()}Styles {\n")
 
         for (i in 0 until nodeList.length) {
@@ -203,6 +257,7 @@ abstract class StylesTask : DefaultTask() {
         outputFile.writeText(stringBuilder.toString())
     }
 }
+
 
 
 
