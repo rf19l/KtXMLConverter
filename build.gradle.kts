@@ -1,10 +1,12 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.io.PrintWriter
+import java.net.URI
 
 plugins {
     kotlin("jvm") version "1.9.0"
     `java-gradle-plugin`
     `kotlin-dsl`
+    `maven-publish`
 }
 
 group = "com.rf.foster.ktxml"
@@ -18,13 +20,35 @@ dependencies {
     implementation(kotlin("stdlib"))
     testImplementation(kotlin("test"))
     testImplementation(gradleTestKit())
-
 }
+
 gradlePlugin {
     plugins {
         create("$group") {
             id = "$group"
             implementationClass = "com.rf.foster.ktxml.KtXMLConverter"
+        }
+    }
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "OSSRH"
+            url = URI.create("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
+            credentials {
+                //TODO: Replace these with Maven username and password
+                username = System.getenv("MAVEN_USERNAME")
+                password = System.getenv("MAVEN_PASSWORD")
+            }
+        }
+        maven {
+            name = "GitHubPackages"
+            url = URI.create("https://maven.pkg.github.com/yourGithubUsername/yourRepoName")  //TODO: Replace username and password
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
         }
     }
 }
