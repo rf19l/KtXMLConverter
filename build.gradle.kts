@@ -1,4 +1,6 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.konan.properties.Properties
+import java.io.FileInputStream
 import java.io.PrintWriter
 import java.net.URI
 
@@ -11,6 +13,7 @@ plugins {
 
 group = "com.rf.foster.ktxml"
 version = "1.0-SNAPSHOT"
+
 
 repositories {
     mavenCentral()
@@ -33,7 +36,7 @@ gradlePlugin {
 
 publishing {
     repositories {
-        maven {
+        /*  maven {
             name = "OSSRH"
             url = URI.create("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
             credentials {
@@ -41,13 +44,18 @@ publishing {
                 username = System.getenv("MAVEN_USERNAME")
                 password = System.getenv("MAVEN_PASSWORD")
             }
-        }
+        }*/
         maven {
+
             name = "GitHubPackages"
-            url = URI.create("https://maven.pkg.github.com/yourGithubUsername/yourRepoName")  //TODO: Replace username and password
+            url = URI.create("https://github.com/rf19l/KtXMLConverter.git")  //TODO: Replace username and password
             credentials {
-                username = System.getenv("GITHUB_ACTOR")
-                password = System.getenv("GITHUB_TOKEN")
+                val githubProperties = Properties().apply {
+                    FileInputStream("github.properties").use { load(it) } // loading the properties file
+                }
+                username = githubProperties["ext.user"].toString()
+                password = githubProperties["ext.key"].toString()
+
             }
         }
     }
@@ -72,7 +80,6 @@ tasks {
         useJUnitPlatform()
     }
 }
-
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "1.8"
 }
