@@ -35,31 +35,26 @@ gradlePlugin {
 }
 
 publishing {
+    publications {
+        create<MavenPublication>("ktXmlKonverter") {
+            groupId = "${project.group}"
+            artifactId = project.displayName
+            version = "${project.version}"
+            from(components["java"])
+        }
+    }
     repositories {
-        /*  maven {
-            name = "OSSRH"
-            url = URI.create("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
-            credentials {
-                //TODO: Replace these with Maven username and password
-                username = System.getenv("MAVEN_USERNAME")
-                password = System.getenv("MAVEN_PASSWORD")
-            }
-        }*/
         maven {
-
             name = "GitHubPackages"
-            url = URI.create("https://github.com/rf19l/KtXMLConverter.git")
+            url = uri("https://maven.pkg.github.com/rf19l/KtXMLConverter")
             credentials {
-                val githubProperties = Properties().apply {
-                    FileInputStream("github.properties").use { load(it) } // loading the properties file
-                }
-                username = githubProperties["ext.user"].toString()
-                password = githubProperties["ext.key"].toString()
-
+                username = System.getenv("GITHUB_USERNAME") ?: ""
+                password = System.getenv("GITHUB_TOKEN") ?: ""
             }
         }
     }
 }
+
 
 tasks {
     val writeClasspathToFile by creating {
