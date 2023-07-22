@@ -2,7 +2,6 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.io.PrintWriter
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-
 plugins {
     kotlin("jvm") version "1.9.0"
     `java-gradle-plugin`
@@ -12,7 +11,6 @@ plugins {
 
 group = "com.rf.foster.ktxml"
 version = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"))
-
 
 repositories {
     mavenCentral()
@@ -33,8 +31,6 @@ gradlePlugin {
     }
 }
 
-
-// build.gradle
 publishing {
     publications {
         create<MavenPublication>("pluginMaven") {
@@ -44,8 +40,6 @@ publishing {
             version = version.toString()
 
             artifact(tasks.named("jar"))
-            artifact(tasks.named("sourcesJar"))
-            artifact(tasks.named("javadocJar"))
         }
         gradlePlugin {
             plugins {
@@ -74,8 +68,6 @@ publishing {
         }
     }
 }
-
-
 
 tasks {
     val writeClasspathToFile by creating {
