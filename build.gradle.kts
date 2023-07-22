@@ -50,9 +50,9 @@ publishing {
             url = uri("https://maven.pkg.github.com/rf19l/KtXMLConverter")
             credentials {
                 username =
-                    (project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")).toString() // defaulting to GITHUB_ACTOR
+                    System.getenv("GITHUB_ACTOR")
                 password =
-                    (project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")).toString() // defaulting to GITHUB_TOKEN
+                   System.getenv("GITHUB_TOKEN")
             }
         }
     }
