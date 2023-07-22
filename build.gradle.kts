@@ -37,7 +37,7 @@ gradlePlugin {
 // build.gradle
 publishing {
     publications {
-        create<MavenPublication>("ktXmlKonverter") {
+        create<MavenPublication>("ktXmlConverter") {
             groupId = "${project.group}"
             artifactId = "ktxmlconverter"
             version = "${project.version}"
