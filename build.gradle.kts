@@ -26,33 +26,50 @@ dependencies {
 
 gradlePlugin {
     plugins {
-        create("$group") {
-            id = "$group"
+        create("ktXMLConverterPlugin") {
+            id = "com.rf.foster.ktxml"
             implementationClass = "com.rf.foster.ktxml.ktXMLConverter"
-            displayName = "ktxmlConverter"
         }
     }
 }
 
+
 // build.gradle
 publishing {
     publications {
-        create<MavenPublication>("ktXmlConverter") {
-            groupId = "${project.group}"
-            artifactId = "ktxmlconverter"
-            version = "${project.version}"
-            from(components["kotlin"])
+        create<MavenPublication>("pluginMaven") {
+            from(components["java"])
+            groupId = group.toString()
+            artifactId = name
+            version = version.toString()
+
+            artifact(tasks.named("jar"))
+            artifact(tasks.named("sourcesJar"))
+            artifact(tasks.named("javadocJar"))
+        }
+        gradlePlugin {
+            plugins {
+                named("ktXMLConverterPlugin") {
+                    id = "com.rf.foster.ktxml"
+                    implementationClass = "com.rf.foster.ktxml.ktXMLConverter"
+                    displayName = "ktXMLConverter Plugin"
+                }
+            }
+            (this as ExtensionAware).extensions.configure<PublishingExtension> {
+                publications {
+                    named<GradlePluginDevelopmentExtension>("gpd")
+                }
+            }
         }
     }
+
     repositories {
         maven {
             name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/rf19l/KtXMLConverter")
             credentials {
-                username =
-                    System.getenv("GITHUB_ACTOR") ?: ""
-                password =
-                    System.getenv("GITHUB_TOKEN") ?: ""
+                username = System.getenv("GITHUB_ACTOR") ?: ""
+                password = System.getenv("GITHUB_TOKEN") ?: ""
             }
         }
     }
