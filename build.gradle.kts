@@ -11,7 +11,7 @@ plugins {
 }
 
 group = "com.rf.foster.ktxml"
-version = "1.0.0"
+version = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"))
 
 
 repositories {
@@ -39,7 +39,7 @@ publishing {
         create<MavenPublication>("ktXmlKonverter") {
             groupId = "${project.group}"
             artifactId = "ktxmlconverter"
-            version = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"))
+            version = "${project.version}"
             from(components["kotlin"])
         }
     }
