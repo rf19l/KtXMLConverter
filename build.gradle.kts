@@ -34,6 +34,7 @@ gradlePlugin {
     }
 }
 
+// build.gradle
 publishing {
     publications {
         create<MavenPublication>("ktXmlKonverter") {
@@ -48,12 +49,15 @@ publishing {
             name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/rf19l/KtXMLConverter")
             credentials {
-                username = System.getenv("GITHUB_USERNAME") ?: ""
-                password = System.getenv("GITHUB_TOKEN") ?: ""
+                username =
+                    (project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")).toString() // defaulting to GITHUB_ACTOR
+                password =
+                    (project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")).toString() // defaulting to GITHUB_TOKEN
             }
         }
     }
 }
+
 
 
 tasks {

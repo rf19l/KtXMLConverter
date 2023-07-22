@@ -1,3 +1,4 @@
+# YAML
 name: Publish package
 
 on:
@@ -25,5 +26,4 @@ jobs:
         run: |
           ./gradlew publish
         env:
-          GITHUB_USERNAME: ${{ secrets.GITHUB_USERNAME }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # using the built-in GITHUB_TOKEN
