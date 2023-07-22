@@ -1,6 +1,7 @@
-import org.gradle.internal.impldep.org.joda.time.LocalDateTime
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.io.PrintWriter
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 plugins {
     kotlin("jvm") version "1.9.0"
@@ -38,7 +39,7 @@ publishing {
         create<MavenPublication>("ktXmlKonverter") {
             groupId = "${project.group}"
             artifactId = "ktxmlconverter"
-            version = LocalDateTime.now().millisOfDay.toString()
+            version = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"))
             from(components["kotlin"])
         }
     }
