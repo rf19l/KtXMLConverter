@@ -39,7 +39,7 @@ publishing {
     publications {
         create<MavenPublication>("ktXmlKonverter") {
             groupId = "${project.group}"
-            artifactId = project.displayName
+            artifactId = project.displayName.toLowerCase()
             version = "${project.version}"
             from(components["java"])
         }
