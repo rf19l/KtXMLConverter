@@ -36,7 +36,7 @@ publishing {
     publications {
         create<MavenPublication>("ktXmlKonverter") {
             groupId = "${project.group}"
-            artifactId = project.displayName.map { it.toLowerCase() }.joinToString(",")
+            artifactId = "ktxmlconverter"
             version = "${project.version}"
             from(components["kotlin"])
         }
