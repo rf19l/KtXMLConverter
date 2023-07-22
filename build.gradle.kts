@@ -1,8 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.jetbrains.kotlin.konan.properties.Properties
-import java.io.FileInputStream
 import java.io.PrintWriter
-import java.net.URI
 
 plugins {
     kotlin("jvm") version "1.9.0"
@@ -39,9 +36,9 @@ publishing {
     publications {
         create<MavenPublication>("ktXmlKonverter") {
             groupId = "${project.group}"
-            artifactId = project.displayName.toLowerCase()
+            artifactId = project.displayName.map { it.toLowerCase() }.joinToString()
             version = "${project.version}"
-            from(components["java"])
+            from(components["kotlin"])
         }
     }
     repositories {
@@ -52,7 +49,7 @@ publishing {
                 username =
                     System.getenv("GITHUB_ACTOR")
                 password =
-                   System.getenv("GITHUB_TOKEN")
+                    System.getenv("GITHUB_TOKEN")
             }
         }
     }
