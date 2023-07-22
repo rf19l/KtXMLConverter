@@ -104,7 +104,7 @@ class ConvertResourceDirectoryTaskFunctionalTest {
         // Similar to your provided test
 
         // Run the convertResourceDir task
-        GradleRunner.create().withProjectDir(testProjectDir).withArguments("convertResourceDir", "--stacktrace")
+        GradleRunner.create().withProjectDir(testProjectDir).withArguments("konvertXmlResources", "--stacktrace")
             .withPluginClasspath().build()
 
         // Check the outputs

@@ -68,7 +68,7 @@ class DimensTaskFunctionalTest {
         )
 
         // Run the dimens task
-        GradleRunner.create().withProjectDir(testProjectDir).withArguments("dimensTask", "--stacktrace")
+        GradleRunner.create().withProjectDir(testProjectDir).withArguments("konvertDimens", "--stacktrace")
             .withPluginClasspath().build()
 
         // Check the output

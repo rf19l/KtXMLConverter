@@ -48,7 +48,7 @@ publishing {
         maven {
 
             name = "GitHubPackages"
-            url = URI.create("https://github.com/rf19l/KtXMLConverter.git")  //TODO: Replace username and password
+            url = URI.create("https://github.com/rf19l/KtXMLConverter.git")
             credentials {
                 val githubProperties = Properties().apply {
                     FileInputStream("github.properties").use { load(it) } // loading the properties file

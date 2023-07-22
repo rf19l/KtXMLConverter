@@ -54,7 +54,7 @@ class ColorsTaskTest {
         // Run the colors task
         GradleRunner.create()
             .withProjectDir(projectDir)
-            .withArguments("colorsTask")
+            .withArguments("konvertColors")
             .withPluginClasspath()
             .build()
 

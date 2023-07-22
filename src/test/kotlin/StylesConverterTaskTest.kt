@@ -102,7 +102,7 @@ class StylesTaskTest {
         )
 
         // Run the tasks
-        GradleRunner.create().withProjectDir(testProjectDir).withArguments("dimensTask", "colorsTask", "stylesTask", "--stacktrace")
+        GradleRunner.create().withProjectDir(testProjectDir).withArguments("konvertDimens", "konvertColors", "konvertStyles", "--stacktrace")
             .withPluginClasspath().build()
 
         // Check the output
@@ -213,7 +213,7 @@ class StylesTaskTest {
         )
 
         // Run the tasks
-        GradleRunner.create().withProjectDir(testProjectDir).withArguments("dimensTask", "colorsTask", "stylesTask", "--stacktrace")
+        GradleRunner.create().withProjectDir(testProjectDir).withArguments("konvertDimens", "konvertColors", "konvertStyles", "--stacktrace")
             .withPluginClasspath().build()
 
         // Check the output

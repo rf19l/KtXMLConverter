@@ -25,20 +25,20 @@ class KtXMLConverter : Plugin<Project> {
             "ktXMLConverterExtension", KtXMLConverterExtension::class.java, project.objects
         )
 
-        val dimensTask = project.tasks.create("dimensTask", DimensTask::class.java) {
+        val dimensTask = project.tasks.create("konvertDimens", DimensTask::class.java) {
             this.projectName.set(extension.projectName)
             this.packageName.set(extension.packageName)
         }
-        val colorsTask = project.tasks.create("colorsTask", ColorsTask::class.java) {
+        val colorsTask = project.tasks.create("konvertColors", ColorsTask::class.java) {
             this.projectName.set(extension.projectName)
             this.packageName.set(extension.packageName)
         }
-        val stylesTask = project.tasks.create("stylesTask", StylesTask::class.java) {
+        val stylesTask = project.tasks.create("konvertStyles", StylesTask::class.java) {
             this.projectName.set(extension.projectName)
             this.packageName.set(extension.packageName)
         }
 
-        val allTasks = project.tasks.register("convertResourceDir", ConvertResourceDirectoryTask::class.java) {
+        val allTasks = project.tasks.register("konvertXmlResources", ConvertResourceDirectoryTask::class.java) {
             this.dependsOn(dimensTask, colorsTask, stylesTask)
         }
     }
