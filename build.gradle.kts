@@ -28,7 +28,8 @@ gradlePlugin {
     plugins {
         create("$group") {
             id = "$group"
-            implementationClass = "com.rf.foster.ktxml.KtXMLConverter"
+            implementationClass = "com.rf.foster.ktxml.ktXMLConverter"
+            displayName = "ktxmlConverter"
         }
     }
 }

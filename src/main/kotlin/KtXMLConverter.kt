@@ -19,7 +19,7 @@ open class KtXMLConverterExtension(objects: ObjectFactory) {
 
 
 // This is your main plugin class
-class KtXMLConverter : Plugin<Project> {
+class ktXMLConverter : Plugin<Project> {
     override fun apply(project: Project) {
         val extension = project.extensions.create(
             "ktXMLConverterExtension", KtXMLConverterExtension::class.java, project.objects
