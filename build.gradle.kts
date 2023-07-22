@@ -33,27 +33,12 @@ gradlePlugin {
 
 publishing {
     publications {
-        create<MavenPublication>("pluginMaven") {
+        create<MavenPublication>("GitHubPackages") {
             from(components["java"])
             groupId = group.toString()
             artifactId = name
             version = version.toString()
-
             artifact(tasks.named("jar"))
-        }
-        gradlePlugin {
-            plugins {
-                named("ktXMLConverterPlugin") {
-                    id = "com.rf.foster.ktxml"
-                    implementationClass = "com.rf.foster.ktxml.ktXMLConverter"
-                    displayName = "ktXMLConverter Plugin"
-                }
-            }
-            (this as ExtensionAware).extensions.configure<PublishingExtension> {
-                publications {
-                    named<GradlePluginDevelopmentExtension>("gpd")
-                }
-            }
         }
     }
 
