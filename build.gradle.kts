@@ -1,3 +1,4 @@
+import org.gradle.internal.impldep.org.joda.time.LocalDateTime
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.io.PrintWriter
 
@@ -37,7 +38,7 @@ publishing {
         create<MavenPublication>("ktXmlKonverter") {
             groupId = "${project.group}"
             artifactId = "ktxmlconverter"
-            version = "${project.version}"
+            version = LocalDateTime.now().millisOfDay.toString()
             from(components["kotlin"])
         }
     }
