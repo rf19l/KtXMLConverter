@@ -34,11 +34,9 @@ gradlePlugin {
 publishing {
     publications {
         create<MavenPublication>("GitHubPackages") {
-            from(components["java"])
             groupId = group.toString()
             artifactId = name
             version = version.toString()
-            artifact(tasks.named("jar"))
         }
     }
 
