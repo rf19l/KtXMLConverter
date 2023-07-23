@@ -37,14 +37,14 @@ gradlePlugin {
 }
 
 publishing {
-    publications {
+/*    publications {
         create<MavenPublication>("GitHubPackages") {
             groupId = "${project.group}"
             artifactId = "ktxmlconverter"
             version = version
             from(components["java"])
         }
-    }
+    }*/
 
     repositories {
         maven {
