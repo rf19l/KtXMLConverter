@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "com.rf.foster.ktxml"
-version ="1.0.0.1"
+version ="1.0.1"
 
 repositories {
     mavenCentral()
@@ -24,8 +24,8 @@ dependencies {
 
 gradlePlugin {
     plugins {
-        create("ktXMLConverterPlugin") {
-            id = "com.rf.foster.ktxml"
+        create("ktxmlconverter") {
+            id = "io.github.rf19l"
             implementationClass = "com.rf.foster.ktxml.ktXMLConverter"
         }
     }
@@ -36,7 +36,7 @@ publishing {
         create<MavenPublication>("GitHubPackages") {
             groupId = "io.github.rf19l"
             artifactId = "ktxmlconverter"
-            version = version.toString()
+            version = version
             from(components["java"])
         }
     }
