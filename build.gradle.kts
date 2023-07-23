@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "com.rf.foster.ktxml"
-version = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"))
+version ="1.0.0.1"
 
 repositories {
     mavenCentral()
@@ -37,6 +37,7 @@ publishing {
             groupId = group.toString()
             artifactId = name
             version = version.toString()
+            from(components["java"])
         }
     }
 
