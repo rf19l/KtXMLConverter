@@ -100,7 +100,7 @@ class DimensTaskFunctionalTest {
         // Set project name
         val projectName = "Example"
 
-        // Setup the test project
+        // Set up the test project
         settingsFile.writeText("""
         rootProject.name = "$projectName"
     """.trimIndent())

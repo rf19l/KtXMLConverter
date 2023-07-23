@@ -2,7 +2,7 @@ import com.rf.foster.ktxml.toCamelCase
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
-class ExtensionFunctionsTest {
+class ToCamelCaseTest {
 
     @Test
     fun `toCamelCase transforms underscore_separated_string to camelCase`() {

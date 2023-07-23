@@ -1,7 +1,9 @@
 package com.rf.foster.ktxml
 
 import java.util.regex.Pattern
+
 fun String.toCamelCase(): String {
+    if (this.isEmpty()) return this
     // Replace dots with underscores
     var formatted = this.replace(".", "_")
 

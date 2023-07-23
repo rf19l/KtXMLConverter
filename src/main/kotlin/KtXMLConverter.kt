@@ -62,6 +62,7 @@ abstract class DimensTask : DefaultTask() {
 
     @TaskAction
     fun convertDimensToKotlin() {
+        val xmlParser = XmlParser()
         val inputFile = project.file("src/main/res/values/dimens.xml")
         if (!inputFile.exists()) {
             println("WARNING: ${inputFile.absolutePath} does not exist.")
@@ -86,25 +87,27 @@ abstract class DimensTask : DefaultTask() {
         for (i in 0 until nodeList.length) {
             val node = nodeList.item(i)
             if (node.nodeType == Node.ELEMENT_NODE) {
-                val element = node as Element
-                val name = element.getAttribute("name").toCamelCase()
-                val valueAndUnit = element.textContent
-                val value = valueAndUnit.replace("dp|sp".toRegex(), "")
-                val unit = when {
-                    valueAndUnit.endsWith("dp") -> ".dp"
-                    valueAndUnit.endsWith("sp") -> ".sp"
-                    else -> "f"
-                }
+                val parsedItem = xmlParser.parseItem(node) // Use XmlParser to parse nodes
+                if (parsedItem is ParsedItem.Dimens) {
+                    val name = parsedItem.itemName
+                    val valueAndUnit = parsedItem.itemValue
+                    val value = valueAndUnit.replace("dp|sp".toRegex(), "")
+                    val unit = when {
+                        valueAndUnit.endsWith("dp") -> ".dp"
+                        valueAndUnit.endsWith("sp") -> ".sp"
+                        else -> "f"
+                    }
 
-                stringBuilder.append("    val $name = $value$unit\n")
+                    stringBuilder.append("    val $name = $value$unit\n")
+                }
             }
         }
 
         stringBuilder.append("}\n")
         outputFile.writeText(stringBuilder.toString())
     }
-
 }
+
 
 abstract class ColorsTask : DefaultTask() {
     @get:Input
@@ -115,6 +118,7 @@ abstract class ColorsTask : DefaultTask() {
 
     @TaskAction
     fun convertColors() {
+        val xmlParser = XmlParser()
         val inputFile = File(project.projectDir, "src/main/res/values/colors.xml")
         if (!inputFile.exists()) {
             println("WARNING: ${inputFile.absolutePath} does not exist.")
@@ -125,38 +129,34 @@ abstract class ColorsTask : DefaultTask() {
         outputDir.mkdirs() // Ensure the directory exists
         // Use projectName in the output file name
         val outputFile = File(outputDir, "${projectName.get()}Colors.kt")
-        val dbFactory = DocumentBuilderFactory.newInstance()
-        val dBuilder = dbFactory.newDocumentBuilder()
-        val doc = dBuilder.parse(inputFile)
 
+        val docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder()
+        val doc = docBuilder.parse(inputFile)
         doc.documentElement.normalize()
-        val nodeList = doc.getElementsByTagName("color")
-        val stringBuilder = StringBuilder()
 
+        val stringBuilder = StringBuilder()
         // Use packageName for the package declaration
         stringBuilder.append("package ${packageName.get()}\n\n")
         stringBuilder.append("import androidx.compose.ui.graphics.Color\n\n")
         // Use projectName in the object name
         stringBuilder.append("object ${projectName.get()}Colors {\n")
 
+        val nodeList = doc.getElementsByTagName("color")
         for (i in 0 until nodeList.length) {
             val node = nodeList.item(i)
             if (node.nodeType == Node.ELEMENT_NODE) {
-                val element = node as Element
-                val name = element.getAttribute("name").toCamelCase()
-                var value = "0x" + element.textContent.substring(1)
-                while (value.length < 10) {
-                    value = "0x" + "F" + value.substring(2)
+                val parsedItem = xmlParser.parseItem(node)
+                if (parsedItem is ParsedItem.Colors) {
+                    stringBuilder.append("    val ${parsedItem.itemName} = ${parsedItem.formatItemValue()}\n")
                 }
-                stringBuilder.append("    val $name = Color($value)\n")
             }
         }
 
         stringBuilder.append("}\n")
         outputFile.writeText(stringBuilder.toString())
     }
-
 }
+
 
 abstract class StylesTask : DefaultTask() {
     @get:Input
