@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "com.rf.foster.ktxml"
-version ="1.0.2"
+version ="1.0.3"
 
 repositories {
     mavenCentral()
@@ -22,12 +22,12 @@ dependencies {
     testImplementation(gradleTestKit())
 }
 gradlePlugin {
-    website.set("https://github.com/rf19l/KtXMLConverter")
-    vcsUrl.set("https://github.com/rf19l/KtXMLConverter.git")
+    website.set("https://github.com/rf19l/ktxmlconverter")
+    vcsUrl.set("https://github.com/rf19l/ktxmlconverter.git")
     plugins {
         create("ktxmlconverter") {
             displayName = "ktxmlconverter"
-            id = "${project.group}"
+            id = "$group"
             description = "A Gradle plugin to convert XML files to Kotlin data objects"
             implementationClass = "com.rf.foster.ktxml.ktXMLConverter"
             tags.set(listOf("testing", "integrationTesting", "compatibility"))
@@ -35,17 +35,6 @@ gradlePlugin {
         }
     }
 }
-
-/*
-gradlePlugin {
-    plugins {
-        create("ktxmlconverter") {
-            id = "io.github.rf19l"
-            implementationClass = "com.rf.foster.ktxml.ktXMLConverter"
-        }
-    }
-}
-*/
 
 publishing {
     publications {
@@ -60,7 +49,7 @@ publishing {
     repositories {
         maven {
             name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/rf19l/KtXMLConverter")
+            url = uri("https://maven.pkg.github.com/rf19l/ktxmlconverter")
             credentials {
                 username = System.getenv("GITHUB_ACTOR") ?: ""
                 password = System.getenv("GITHUB_TOKEN") ?: ""
