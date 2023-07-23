@@ -7,6 +7,8 @@ plugins {
     `java-gradle-plugin`
     `kotlin-dsl`
     `maven-publish`
+    id("com.gradle.plugin-publish") version "1.2.0"
+
 }
 
 group = "com.rf.foster.ktxml"
@@ -21,7 +23,22 @@ dependencies {
     testImplementation(kotlin("test"))
     testImplementation(gradleTestKit())
 }
+gradlePlugin {
+    website.set("https://github.com/rf19l/KtXMLConverter")
+    vcsUrl.set("https://github.com/rf19l/KtXMLConverter.git")
+    plugins {
+        create("ktxmlconverter") {
+            displayName = "ktxmlconverter"
+            id = "${project.group}"
+            description = "A Gradle plugin to convert XML files to Kotlin data objects"
+            implementationClass = "com.rf.foster.ktxml.ktXMLConverter"
+            tags.set(listOf("testing", "integrationTesting", "compatibility"))
 
+        }
+    }
+}
+
+/*
 gradlePlugin {
     plugins {
         create("ktxmlconverter") {
@@ -30,11 +47,12 @@ gradlePlugin {
         }
     }
 }
+*/
 
 publishing {
     publications {
         create<MavenPublication>("GitHubPackages") {
-            groupId = "io.github.rf19l"
+            groupId = "${project.group}"
             artifactId = "ktxmlconverter"
             version = version
             from(components["java"])
