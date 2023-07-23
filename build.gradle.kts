@@ -34,8 +34,8 @@ gradlePlugin {
 publishing {
     publications {
         create<MavenPublication>("GitHubPackages") {
-            groupId = group.toString()
-            artifactId = name
+            groupId = "io.github.rf19l"
+            artifactId = "ktxmlconverter"
             version = version.toString()
             from(components["java"])
         }
