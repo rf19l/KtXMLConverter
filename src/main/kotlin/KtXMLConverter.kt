@@ -87,8 +87,7 @@ abstract class DimensTask : DefaultTask() {
             val node = nodeList.item(i)
             if (node.nodeType == Node.ELEMENT_NODE) {
                 val element = node as Element
-                val name =
-                    element.getAttribute("name").replace("_([a-z])".toRegex()) { it.value[1].toUpperCase().toString() }
+                val name = element.getAttribute("name").toCamelCase()
                 val valueAndUnit = element.textContent
                 val value = valueAndUnit.replace("dp|sp".toRegex(), "")
                 val unit = when {
@@ -104,6 +103,7 @@ abstract class DimensTask : DefaultTask() {
         stringBuilder.append("}\n")
         outputFile.writeText(stringBuilder.toString())
     }
+
 }
 
 abstract class ColorsTask : DefaultTask() {
@@ -143,7 +143,7 @@ abstract class ColorsTask : DefaultTask() {
             val node = nodeList.item(i)
             if (node.nodeType == Node.ELEMENT_NODE) {
                 val element = node as Element
-                val name = element.getAttribute("name").replace(Regex("_\\w")) { it.value[1].toUpperCase().toString() }
+                val name = element.getAttribute("name").toCamelCase()
                 var value = "0x" + element.textContent.substring(1)
                 while (value.length < 10) {
                     value = "0x" + "F" + value.substring(2)
@@ -197,7 +197,6 @@ abstract class StylesTask : DefaultTask() {
 
                 // Parse each item
                 val items = element.getElementsByTagName("item")
-                val properties = mutableMapOf<String, String>()
                 for (j in 0 until items.length) {
                     val item = items.item(j)
                     val itemName = item.attributes.getNamedItem("name").nodeValue
@@ -219,8 +218,7 @@ abstract class StylesTask : DefaultTask() {
             if (node.nodeType == Node.ELEMENT_NODE) {
                 val element = node as Element
                 val name =
-                    element.getAttribute("name").replace(".", "_").split("_").joinToString("") { it.capitalize() }
-                        .decapitalize()
+                    element.getAttribute("name").toCamelCase()
 
                 // Parse each item
                 val items = element.getElementsByTagName("item")
@@ -228,8 +226,7 @@ abstract class StylesTask : DefaultTask() {
                 for (j in 0 until items.length) {
                     val item = items.item(j)
                     val itemName = item.attributes.getNamedItem("name").nodeValue
-                    val itemValue = item.textContent.replace("@dimen/", "").replace("@color/", "")
-                        .replace("_([a-z0-9])".toRegex()) { it.groupValues[1].toUpperCase() }.decapitalize()
+                    val itemValue = item.textContent.replace("@dimen/", "").replace("@color/", "").toCamelCase()
                     properties[itemName] = itemValue
                 }
 

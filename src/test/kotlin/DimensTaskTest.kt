@@ -95,6 +95,62 @@ class DimensTaskFunctionalTest {
         Assertions.assertTrue(outputFile.exists())
         Assertions.assertEquals(expectedOutput, outputFile.readText().trim())
     }
+    @Test
+    fun `converts dimens names to camel case`() {
+        // Set project name
+        val projectName = "Example"
+
+        // Setup the test project
+        settingsFile.writeText("""
+        rootProject.name = "$projectName"
+    """.trimIndent())
+
+        buildFile.writeText("""
+        plugins {
+            id("com.rf.foster.ktxml")
+        }
+        
+        ktXMLConverterExtension {
+            projectName.set("$projectName")
+            packageName.set("$packageName")
+        }
+    """.trimIndent())
+
+        // Write dimens.xml to the project directory
+        val resDir = File(testProjectDir, "src/main/res/values")
+        resDir.mkdirs()
+        val dimensFile = File(resDir, "dimens.xml")
+        dimensFile.writeText("""
+        <?xml version="1.0" encoding="utf-8"?>
+        <resources>
+            <dimen name="size_layout_01">16dp</dimen>
+        </resources>
+    """.trimIndent())
+
+        // Run the dimens task
+        GradleRunner.create()
+            .withProjectDir(testProjectDir)
+            .withArguments("konvertDimens", "--stacktrace")
+            .withPluginClasspath()
+            .build()
+
+        // Check the output
+        val expectedName = "val sizeLayout01 = 16.dp"
+        val outputDir = File(testProjectDir, "build/generated/source/kapt/debug/${packageName.replace('.', '/')}")
+        val outputFile = File(outputDir, "${projectName}Dimens.kt")
+
+        Assertions.assertTrue(outputFile.exists(), "Output file does not exist")
+
+        val actualContent = outputFile.readText().trim()
+        Assertions.assertEquals(
+            expectedName,
+            actualContent.substringAfterLast("object ${projectName}Dimens {")
+                .substringBeforeLast("}")
+                .trim(),
+            "Output content does not match the expected content"
+        )
+    }
+
 }
 
 

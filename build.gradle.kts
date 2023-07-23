@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "com.rf.foster.ktxml"
-version ="1.0.4"
+version ="1.0.9"
 
 repositories {
     mavenCentral()
@@ -36,16 +36,7 @@ gradlePlugin {
     }
 }
 
-publishing {
-/*    publications {
-        create<MavenPublication>("GitHubPackages") {
-            groupId = "${project.group}"
-            artifactId = "ktxmlconverter"
-            version = version
-            from(components["java"])
-        }
-    }*/
-
+/*publishing {
     repositories {
         maven {
             name = "GitHubPackages"
@@ -56,7 +47,7 @@ publishing {
             }
         }
     }
-}
+}*/
 
 tasks {
     val writeClasspathToFile by creating {
