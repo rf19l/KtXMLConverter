@@ -5,7 +5,7 @@ import java.util.regex.Pattern
 fun String.toCamelCase(): String {
     if (this.isEmpty()) return this
     // Replace dots with underscores
-    var formatted = this.replace(".", "_")
+    var formatted = this.replace(".", "_").removePrefix("android:")
 
     // Remove trailing underscores
     formatted = formatted.trimEnd('_')

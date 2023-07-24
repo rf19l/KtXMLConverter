@@ -62,7 +62,7 @@ abstract class DimensTask : DefaultTask() {
 
     @TaskAction
     fun convertDimensToKotlin() {
-        val xmlParser = XmlParser()
+        val rawXmlParser = RawXmlParser()
         val inputFile = project.file("src/main/res/values/dimens.xml")
         if (!inputFile.exists()) {
             println("WARNING: ${inputFile.absolutePath} does not exist.")
@@ -71,12 +71,15 @@ abstract class DimensTask : DefaultTask() {
         val outputDir = File(project.buildDir, "generated/source/kapt/debug/${packageName.get().replace('.', '/')}")
         outputDir.mkdirs() // Ensure the directory exists
         val outputFile = File(outputDir, "${projectName.get()}Dimens.kt")
-        val dbFactory = DocumentBuilderFactory.newInstance()
-        val dBuilder = dbFactory.newDocumentBuilder()
-        val doc = dBuilder.parse(inputFile)
 
-        doc.documentElement.normalize()
-        val nodeList = doc.getElementsByTagName("dimen")
+        // Parse the XML input
+        val dimenXmlResources = rawXmlParser.parseXml(inputFile.readText())
+
+        // Map XML resources to Kotlin resources
+        val xmlResourceMapper = XmlResourceMapper(projectName.get())
+        val kotlinDimens =
+            xmlResourceMapper.transformToKotlinResource(dimenXmlResources).filterIsInstance<KotlinDimenResource>()
+
         val stringBuilder = StringBuilder()
 
         stringBuilder.append("package ${packageName.get()}\n\n")
@@ -84,28 +87,14 @@ abstract class DimensTask : DefaultTask() {
         stringBuilder.append("import androidx.compose.ui.unit.sp\n\n")
         stringBuilder.append("object ${projectName.get()}Dimens {\n")
 
-        for (i in 0 until nodeList.length) {
-            val node = nodeList.item(i)
-            if (node.nodeType == Node.ELEMENT_NODE) {
-                val parsedItem = xmlParser.parseItem(node) // Use XmlParser to parse nodes
-                if (parsedItem is ParsedItem.Dimens) {
-                    val name = parsedItem.itemName
-                    val valueAndUnit = parsedItem.itemValue
-                    val value = valueAndUnit.replace("dp|sp".toRegex(), "")
-                    val unit = when {
-                        valueAndUnit.endsWith("dp") -> ".dp"
-                        valueAndUnit.endsWith("sp") -> ".sp"
-                        else -> "f"
-                    }
-
-                    stringBuilder.append("    val $name = $value$unit\n")
-                }
-            }
+        kotlinDimens.forEach {
+            stringBuilder.append("    val ${it.name} = ${it.value}${it.unit}\n")
         }
 
         stringBuilder.append("}\n")
         outputFile.writeText(stringBuilder.toString())
     }
+
 }
 
 
@@ -118,38 +107,38 @@ abstract class ColorsTask : DefaultTask() {
 
     @TaskAction
     fun convertColors() {
-        val xmlParser = XmlParser()
         val inputFile = File(project.projectDir, "src/main/res/values/colors.xml")
         if (!inputFile.exists()) {
             println("WARNING: ${inputFile.absolutePath} does not exist.")
             return
         }
+
+        // Use RawXmlParser to parse the XML
+        val rawXmlParser = RawXmlParser()
+        val xmlColors = rawXmlParser.parseXml(inputFile)
+
+        // Transform XML resources to Kotlin resources using XmlResourceMapper
+        val xmlResourceMapper = XmlResourceMapper(projectName.get())
+        val kotlinColors =
+            xmlResourceMapper.transformToKotlinResource(xmlColors).filterIsInstance<KotlinColorResource>()
+
         // Replace '.' with the file separator for the package name to create a file path
         val outputDir = File(project.buildDir, "generated/source/kapt/debug/${packageName.get().replace('.', '/')}")
         outputDir.mkdirs() // Ensure the directory exists
         // Use projectName in the output file name
         val outputFile = File(outputDir, "${projectName.get()}Colors.kt")
 
-        val docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder()
-        val doc = docBuilder.parse(inputFile)
-        doc.documentElement.normalize()
-
         val stringBuilder = StringBuilder()
+
         // Use packageName for the package declaration
         stringBuilder.append("package ${packageName.get()}\n\n")
         stringBuilder.append("import androidx.compose.ui.graphics.Color\n\n")
         // Use projectName in the object name
         stringBuilder.append("object ${projectName.get()}Colors {\n")
 
-        val nodeList = doc.getElementsByTagName("color")
-        for (i in 0 until nodeList.length) {
-            val node = nodeList.item(i)
-            if (node.nodeType == Node.ELEMENT_NODE) {
-                val parsedItem = xmlParser.parseItem(node)
-                if (parsedItem is ParsedItem.Colors) {
-                    stringBuilder.append("    val ${parsedItem.itemName} = ${parsedItem.formatItemValue()}\n")
-                }
-            }
+        for (kotlinColor in kotlinColors) {
+            // Just directly use KotlinColorResource to generate the required line
+            stringBuilder.append("    val ${kotlinColor.name} = ${kotlinColor.value}\n")
         }
 
         stringBuilder.append("}\n")
@@ -167,89 +156,22 @@ abstract class StylesTask : DefaultTask() {
 
     @TaskAction
     fun convertStylesToKotlin() {
-        val inputFile = project.file("src/main/res/values/styles.xml")
-        if (!inputFile.exists()) {
-            println("WARNING: ${inputFile.absolutePath} does not exist.")
-            return
-        }
-        val outputDir = project.file("build/generated/source/kapt/debug/${packageName.get().replace('.', '/')}")
-        outputDir.mkdirs() // Ensure the directory exists
+        // Step 1: Parse raw XML
+        val parser = RawXmlParser()
+        val stylesFile = File(project.projectDir, "src/main/res/values/styles.xml")
+        val rawStyles = parser.parseXml(stylesFile)
+
+        // Step 2: Transform raw XML to Kotlin
+        val mapper = XmlResourceMapper(projectName.get())
+        val kotlinStyles = mapper.transformToKotlinResource(rawStyles).filterIsInstance<KotlinStyleResource>()
+        // Step 3: Write transformed data to file
+        val outputDir = File(project.buildDir, "generated/source/kapt/debug/${packageName.get().replace('.', '/')}")
+        outputDir.mkdirs()
         val outputFile = File(outputDir, "${projectName.get()}Styles.kt")
-        val dbFactory = DocumentBuilderFactory.newInstance()
-        val dBuilder = dbFactory.newDocumentBuilder()
-        val doc = dBuilder.parse(inputFile)
-
-        doc.documentElement.normalize()
-        val nodeList = doc.getElementsByTagName("style")
-        val stringBuilder = StringBuilder()
-
-        stringBuilder.append("package ${packageName.get()}\n\n")
-        stringBuilder.append("import androidx.compose.ui.text.TextStyle\n")
-        stringBuilder.append("import ${packageName.get()}.${projectName.get()}Colors\n")
-        stringBuilder.append("import ${packageName.get()}.${projectName.get()}Dimens\n\n")
-
-        var fontWeightImportNeeded = false
-
-        for (i in 0 until nodeList.length) {
-            val node = nodeList.item(i)
-            if (node.nodeType == Node.ELEMENT_NODE) {
-                val element = node as Element
-
-                // Parse each item
-                val items = element.getElementsByTagName("item")
-                for (j in 0 until items.length) {
-                    val item = items.item(j)
-                    val itemName = item.attributes.getNamedItem("name").nodeValue
-                    if (itemName == "android:textStyle") {
-                        fontWeightImportNeeded = true
-                    }
-                }
-            }
-        }
-
-        if (fontWeightImportNeeded) {
-            stringBuilder.append("import androidx.compose.ui.text.font.FontWeight\n\n")
-        }
-
-        stringBuilder.append("object ${projectName.get()}Styles {\n")
-
-        for (i in 0 until nodeList.length) {
-            val node = nodeList.item(i)
-            if (node.nodeType == Node.ELEMENT_NODE) {
-                val element = node as Element
-                val name =
-                    element.getAttribute("name").toCamelCase()
-
-                // Parse each item
-                val items = element.getElementsByTagName("item")
-                val properties = mutableMapOf<String, String>()
-                for (j in 0 until items.length) {
-                    val item = items.item(j)
-                    val itemName = item.attributes.getNamedItem("name").nodeValue
-                    val itemValue = item.textContent.replace("@dimen/", "").replace("@color/", "").toCamelCase()
-                    properties[itemName] = itemValue
-                }
-
-                val textSize = properties["android:textSize"]?.let { "${projectName.get()}Dimens.$it" }
-                val textStyle = properties["android:textStyle"]
-                val textColor = properties["android:textColor"]?.let { "${projectName.get()}Colors.$it" }
-                val lineHeight = properties["lineHeight"]?.let { "${projectName.get()}Dimens.$it" }
-                val letterSpacing = properties["android:letterSpacing"]?.let { "${projectName.get()}Dimens.$it" }
-
-                stringBuilder.append("    val $name = TextStyle(\n")
-                if (textSize != null) stringBuilder.append("        fontSize = $textSize,\n")
-                if (textStyle != null) stringBuilder.append("        fontWeight = FontWeight.${textStyle.capitalize()},\n")
-                if (textColor != null) stringBuilder.append("        color = $textColor,\n")
-                if (lineHeight != null) stringBuilder.append("        lineHeight = $lineHeight,\n")
-                if (letterSpacing != null) stringBuilder.append("        letterSpacing = $letterSpacing,\n")
-                stringBuilder.append("    )\n")
-            }
-        }
-
-        stringBuilder.append("}\n")
-        outputFile.writeText(stringBuilder.toString())
+        outputFile.writeText(KotlinFileBuilder().buildStyles(packageName.get(), projectName.get(), kotlinStyles))
     }
 }
+
 
 
 

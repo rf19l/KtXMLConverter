@@ -1,30 +1,31 @@
 # YAML
-name: Publish package
-
-on:
-  push:
-    branches:
-      - release
-
-jobs:
-  publish:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Set up JDK
-        uses: actions/setup-java@v2
-        with:
-          distribution: 'adopt'
-          java-version: '11'
-          cache: gradle
-
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-
-      - name: Publish package
-        run: |
-          ./gradlew publish --info
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # using the built-in GITHUB_TOKEN
+# TODO update to publish to gradle plugin portal instead once approved
+#name: Publish package
+#
+#on:
+#  push:
+#    branches:
+#      - release
+#
+#jobs:
+#  publish:
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#      - uses: actions/checkout@v2
+#
+#      - name: Set up JDK
+#        uses: actions/setup-java@v2
+#        with:
+#          distribution: 'adopt'
+#          java-version: '11'
+#          cache: gradle
+#
+#      - name: Grant execute permission for gradlew
+#        run: chmod +x gradlew
+#
+#      - name: Publish package
+#        run: |
+#          ./gradlew publish --info
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # using the built-in GITHUB_TOKEN
