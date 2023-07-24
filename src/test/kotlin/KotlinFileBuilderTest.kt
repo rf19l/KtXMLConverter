@@ -1,5 +1,5 @@
-import com.rf.foster.ktxml.models.kotlin_resource.KotlinColorResource
-import com.rf.foster.ktxml.models.kotlin_resource.KotlinDimenResource
+import com.rf.foster.ktxml.models.KotlinColorResource
+import com.rf.foster.ktxml.models.KotlinDimenResource
 import com.rf.foster.ktxml.mappers.KotlinFileBuilder
 import org.gradle.internal.impldep.junit.framework.TestCase.assertEquals
 import org.junit.jupiter.api.Test

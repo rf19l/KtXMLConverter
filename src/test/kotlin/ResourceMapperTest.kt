@@ -1,15 +1,15 @@
 import com.rf.foster.ktxml.mappers.XmlResourceMapper
-import com.rf.foster.ktxml.models.kotlin_resource.*
-import com.rf.foster.ktxml.models.raw_xml.ColorXmlResource
-import com.rf.foster.ktxml.models.raw_xml.DimenXmlResource
-import com.rf.foster.ktxml.models.raw_xml.StyleXmlResource
+import com.rf.foster.ktxml.models.*
+import com.rf.foster.ktxml.models.ColorXmlResource
+import com.rf.foster.ktxml.models.DimenXmlResource
+import com.rf.foster.ktxml.models.StyleXmlResource
 import org.gradle.internal.impldep.junit.framework.TestCase.assertEquals
 import org.gradle.internal.impldep.junit.framework.TestCase.assertTrue
 import org.junit.jupiter.api.Test
 
 class ResourceMapperTest {
     @Test
-    fun `testXmlResourceMapper`() {
+    fun testXmlResourceMapper() {
         // assuming that rawXmlParser.parseXml has been called and the parsed lists are:
         val styles = listOf(
             StyleXmlResource(
@@ -170,8 +170,8 @@ class ResourceMapperTest {
             KotlinDimenResource("fontSizeSmall", "12",".sp"),
             KotlinDimenResource("lineHeightLarge", "24",".sp"),
             KotlinDimenResource("lineHeightSmall", "16",".sp"),
-            KotlinDimenResource("letterSpacingNormal", "0.025","f"),
-            KotlinDimenResource("letterSpacingLarge", "0.05","f")
+            KotlinDimenResource("letterSpacingNormal", "0.025",".sp"),
+            KotlinDimenResource("letterSpacingLarge", "0.05",".sp")
         )
 
         assertEquals(expectedDimens.size, kotlinDimens.size)

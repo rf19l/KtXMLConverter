@@ -1,4 +1,4 @@
-package com.rf.foster.ktxml.models.kotlin_resource
+package com.rf.foster.ktxml.models
 
 sealed class KotlinResource {
     abstract val name: String

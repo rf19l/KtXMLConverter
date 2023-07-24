@@ -1,7 +1,7 @@
-import com.rf.foster.ktxml.models.raw_xml.ColorXmlResource
-import com.rf.foster.ktxml.models.raw_xml.DimenXmlResource
+import com.rf.foster.ktxml.models.ColorXmlResource
+import com.rf.foster.ktxml.models.DimenXmlResource
 import com.rf.foster.ktxml.mappers.RawXmlParser
-import com.rf.foster.ktxml.models.raw_xml.StyleXmlResource
+import com.rf.foster.ktxml.models.StyleXmlResource
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import java.io.File

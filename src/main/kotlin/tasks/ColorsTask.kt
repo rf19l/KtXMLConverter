@@ -1,6 +1,6 @@
 package com.rf.foster.ktxml.tasks
 
-import com.rf.foster.ktxml.models.kotlin_resource.KotlinColorResource
+import com.rf.foster.ktxml.models.KotlinColorResource
 import com.rf.foster.ktxml.mappers.KotlinFileBuilder
 import com.rf.foster.ktxml.mappers.RawXmlParser
 import com.rf.foster.ktxml.mappers.XmlResourceMapper
@@ -30,7 +30,6 @@ abstract class ColorsTask : DefaultTask() {
         val kotlinColors = mapper.transformToKotlinResource(rawColors).filterIsInstance<KotlinColorResource>()
         val outputDir = File(project.buildDir, "generated/source/kapt/debug/${packageName.get().replace('.', '/')}")
         outputDir.mkdirs()
-        println(kotlinColors.map { it.value }.toString())
         val outputFile = File(outputDir, "${projectName.get()}Colors.kt")
         outputFile.writeText(KotlinFileBuilder().buildColors(packageName.get(), projectName.get(), kotlinColors))
     }

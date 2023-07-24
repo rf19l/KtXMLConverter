@@ -1,4 +1,4 @@
-package com.rf.foster.ktxml.models.raw_xml
+package com.rf.foster.ktxml.models
 
 sealed class XmlResource {
     abstract val name: String

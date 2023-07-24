@@ -1,10 +1,10 @@
 package com.rf.foster.ktxml.mappers
 
-import com.rf.foster.ktxml.models.kotlin_resource.*
-import com.rf.foster.ktxml.models.raw_xml.ColorXmlResource
-import com.rf.foster.ktxml.models.raw_xml.DimenXmlResource
-import com.rf.foster.ktxml.models.raw_xml.StyleXmlResource
-import com.rf.foster.ktxml.models.raw_xml.XmlResource
+import com.rf.foster.ktxml.models.*
+import com.rf.foster.ktxml.models.ColorXmlResource
+import com.rf.foster.ktxml.models.DimenXmlResource
+import com.rf.foster.ktxml.models.StyleXmlResource
+import com.rf.foster.ktxml.models.XmlResource
 import com.rf.foster.ktxml.utils.toCamelCase
 
 class XmlResourceMapper(private val projectName: String) {
@@ -77,11 +77,12 @@ class XmlResourceMapper(private val projectName: String) {
 
     private fun transformDimen(dimen: DimenXmlResource): KotlinDimenResource {
         val (value, unit) = when {
-            dimen.value.endsWith("sp") -> Pair(dimen.value.removeSuffix("sp"), ".sp")
+            dimen.value.endsWith("sp") || dimen.name.contains("letterSpacing") -> Pair(dimen.value.removeSuffix("sp"), ".sp")
             dimen.value.endsWith("dp") -> Pair(dimen.value.removeSuffix("dp"), ".dp")
             else -> Pair(dimen.value, "f")
         }
         return KotlinDimenResource(dimen.name.toCamelCase(), value, unit)
     }
+
 
 }

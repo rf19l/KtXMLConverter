@@ -1,7 +1,7 @@
 package com.rf.foster.ktxml.tasks
 
 import com.rf.foster.ktxml.mappers.KotlinFileBuilder
-import com.rf.foster.ktxml.models.kotlin_resource.KotlinStyleResource
+import com.rf.foster.ktxml.models.KotlinStyleResource
 import com.rf.foster.ktxml.mappers.RawXmlParser
 import com.rf.foster.ktxml.mappers.XmlResourceMapper
 import org.gradle.api.DefaultTask
