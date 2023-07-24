@@ -1,7 +1,10 @@
-package com.rf.foster.ktxml
+package com.rf.foster.ktxml.utils
 
 import java.util.regex.Pattern
 
+/**
+ * Converts various formats of names in xml to a camelCase representation
+ */
 fun String.toCamelCase(): String {
     if (this.isEmpty()) return this
     // Replace dots with underscores

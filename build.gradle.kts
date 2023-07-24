@@ -36,19 +36,6 @@ gradlePlugin {
     }
 }
 
-/*publishing {
-    repositories {
-        maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/rf19l/ktxmlconverter")
-            credentials {
-                username = System.getenv("GITHUB_ACTOR") ?: ""
-                password = System.getenv("GITHUB_TOKEN") ?: ""
-            }
-        }
-    }
-}*/
-
 tasks {
     val writeClasspathToFile by creating {
         val outputDir = file("$buildDir/pluginUnderTestMetadata")

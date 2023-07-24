@@ -1,5 +1,9 @@
-package com.rf.foster.ktxml
+package com.rf.foster.ktxml.mappers
 
+import com.rf.foster.ktxml.models.raw_xml.ColorXmlResource
+import com.rf.foster.ktxml.models.raw_xml.DimenXmlResource
+import com.rf.foster.ktxml.models.raw_xml.StyleXmlResource
+import com.rf.foster.ktxml.models.raw_xml.XmlResource
 import org.w3c.dom.Document
 import org.w3c.dom.Element
 import org.w3c.dom.Node
