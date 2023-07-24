@@ -117,4 +117,66 @@ class ResourceMapperTest {
             }
         }
     }
+
+    @Test
+    fun testColorResourceMapper(){
+        val colors = listOf(
+            ColorXmlResource("textColorPrimary", "#000000"),
+            ColorXmlResource("textColorSecondary", "#808080"),
+            ColorXmlResource("colorAccent", "#FF4081"),
+            ColorXmlResource("colorPrimary", "#3F51B5")
+        )
+
+        val projectName = "ProjectName"
+        val xmlResourceMapper = XmlResourceMapper(projectName)
+        val kotlinColors = xmlResourceMapper.transformToKotlinResource(colors)
+
+        val expectedColors = listOf(
+            KotlinColorResource("textColorPrimary","Color(0xFF000000)"),
+            KotlinColorResource("textColorSecondary", "Color(0xFF808080)"),
+            KotlinColorResource("colorAccent", "Color(0xFFFF4081)"),
+            KotlinColorResource("colorPrimary", "Color(0xFF3F51B5)")
+        )
+
+        assertEquals(expectedColors.size, kotlinColors.size)
+        expectedColors.zip(kotlinColors).forEach { (expected, actual) ->
+            assertTrue(actual is KotlinColorResource)
+            assertEquals(expected.name, (actual as KotlinColorResource).name)
+            assertEquals(expected.value, actual.value)
+        }
+    }
+
+    @Test
+    fun testDimensResourceMapper(){
+        val dimens = listOf(
+            DimenXmlResource("fontSizeLarge", "18sp"),
+            DimenXmlResource("fontSizeSmall", "12sp"),
+            DimenXmlResource("lineHeightLarge", "24sp"),
+            DimenXmlResource("lineHeightSmall", "16sp"),
+            DimenXmlResource("letterSpacingNormal", "0.025"),
+            DimenXmlResource("letterSpacingLarge", "0.05")
+        )
+
+        val projectName = "ProjectName"
+        val xmlResourceMapper = XmlResourceMapper(projectName)
+        val kotlinDimens = xmlResourceMapper.transformToKotlinResource(dimens)
+
+        val expectedDimens = listOf(
+            KotlinDimenResource("fontSizeLarge", "18",".sp"),
+            KotlinDimenResource("fontSizeSmall", "12",".sp"),
+            KotlinDimenResource("lineHeightLarge", "24",".sp"),
+            KotlinDimenResource("lineHeightSmall", "16",".sp"),
+            KotlinDimenResource("letterSpacingNormal", "0.025","f"),
+            KotlinDimenResource("letterSpacingLarge", "0.05","f")
+        )
+
+        assertEquals(expectedDimens.size, kotlinDimens.size)
+        expectedDimens.zip(kotlinDimens).forEach { (expected, actual) ->
+            assertTrue(actual is KotlinDimenResource)
+            assertEquals(expected.name, (actual as KotlinDimenResource).name)
+            assertEquals(expected.value, actual.value)
+            assertEquals(expected.unit, actual.unit)
+        }
+    }
+
 }

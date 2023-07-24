@@ -7,10 +7,7 @@ import org.gradle.api.model.ObjectFactory
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
-import org.w3c.dom.Element
-import org.w3c.dom.Node
 import java.io.File
-import javax.xml.parsers.DocumentBuilderFactory
 
 open class KtXMLConverterExtension(objects: ObjectFactory) {
     val projectName: Property<String> = objects.property(String::class.java)
@@ -62,7 +59,21 @@ abstract class DimensTask : DefaultTask() {
 
     @TaskAction
     fun convertDimensToKotlin() {
-        val rawXmlParser = RawXmlParser()
+        val parser = RawXmlParser()
+        val dimensFile = File(project.projectDir, "src/main/res/values/dimens.xml")
+        if (dimensFile.exists().not()) {
+            println("WARNING: ${dimensFile.absolutePath} does not exist.")
+            return
+        }
+        val rawDimens = parser.parseXml(dimensFile)
+        val mapper = XmlResourceMapper(projectName.get())
+        val kotlinDimensionResource = mapper.transformToKotlinResource(rawDimens).filterIsInstance<KotlinDimenResource>()
+        val outputDir = File(project.buildDir, "generated/source/kapt/debug/${packageName.get().replace('.', '/')}")
+        outputDir.mkdirs()
+        println(kotlinDimensionResource.map { it.value }.toString())
+        val outputFile = File(outputDir, "${projectName.get()}Dimens.kt")
+        outputFile.writeText(KotlinFileBuilder().buildDimens(packageName.get(), projectName.get(), kotlinDimensionResource))
+        /*        val rawXmlParser = RawXmlParser()
         val inputFile = project.file("src/main/res/values/dimens.xml")
         if (!inputFile.exists()) {
             println("WARNING: ${inputFile.absolutePath} does not exist.")
@@ -71,17 +82,11 @@ abstract class DimensTask : DefaultTask() {
         val outputDir = File(project.buildDir, "generated/source/kapt/debug/${packageName.get().replace('.', '/')}")
         outputDir.mkdirs() // Ensure the directory exists
         val outputFile = File(outputDir, "${projectName.get()}Dimens.kt")
-
-        // Parse the XML input
         val dimenXmlResources = rawXmlParser.parseXml(inputFile.readText())
-
-        // Map XML resources to Kotlin resources
         val xmlResourceMapper = XmlResourceMapper(projectName.get())
         val kotlinDimens =
             xmlResourceMapper.transformToKotlinResource(dimenXmlResources).filterIsInstance<KotlinDimenResource>()
-
         val stringBuilder = StringBuilder()
-
         stringBuilder.append("package ${packageName.get()}\n\n")
         stringBuilder.append("import androidx.compose.ui.unit.dp\n")
         stringBuilder.append("import androidx.compose.ui.unit.sp\n\n")
@@ -90,9 +95,8 @@ abstract class DimensTask : DefaultTask() {
         kotlinDimens.forEach {
             stringBuilder.append("    val ${it.name} = ${it.value}${it.unit}\n")
         }
-
         stringBuilder.append("}\n")
-        outputFile.writeText(stringBuilder.toString())
+        outputFile.writeText(stringBuilder.toString())*/
     }
 
 }
@@ -107,42 +111,20 @@ abstract class ColorsTask : DefaultTask() {
 
     @TaskAction
     fun convertColors() {
-        val inputFile = File(project.projectDir, "src/main/res/values/colors.xml")
-        if (!inputFile.exists()) {
-            println("WARNING: ${inputFile.absolutePath} does not exist.")
+        val parser = RawXmlParser()
+        val colorsFile = File(project.projectDir, "src/main/res/values/colors.xml")
+        if (colorsFile.exists().not()) {
+            println("WARNING: ${colorsFile.absolutePath} does not exist.")
             return
         }
-
-        // Use RawXmlParser to parse the XML
-        val rawXmlParser = RawXmlParser()
-        val xmlColors = rawXmlParser.parseXml(inputFile)
-
-        // Transform XML resources to Kotlin resources using XmlResourceMapper
-        val xmlResourceMapper = XmlResourceMapper(projectName.get())
-        val kotlinColors =
-            xmlResourceMapper.transformToKotlinResource(xmlColors).filterIsInstance<KotlinColorResource>()
-
-        // Replace '.' with the file separator for the package name to create a file path
+        val rawColors = parser.parseXml(colorsFile)
+        val mapper = XmlResourceMapper(projectName.get())
+        val kotlinColors = mapper.transformToKotlinResource(rawColors).filterIsInstance<KotlinColorResource>()
         val outputDir = File(project.buildDir, "generated/source/kapt/debug/${packageName.get().replace('.', '/')}")
-        outputDir.mkdirs() // Ensure the directory exists
-        // Use projectName in the output file name
+        outputDir.mkdirs()
+        println(kotlinColors.map { it.value }.toString())
         val outputFile = File(outputDir, "${projectName.get()}Colors.kt")
-
-        val stringBuilder = StringBuilder()
-
-        // Use packageName for the package declaration
-        stringBuilder.append("package ${packageName.get()}\n\n")
-        stringBuilder.append("import androidx.compose.ui.graphics.Color\n\n")
-        // Use projectName in the object name
-        stringBuilder.append("object ${projectName.get()}Colors {\n")
-
-        for (kotlinColor in kotlinColors) {
-            // Just directly use KotlinColorResource to generate the required line
-            stringBuilder.append("    val ${kotlinColor.name} = ${kotlinColor.value}\n")
-        }
-
-        stringBuilder.append("}\n")
-        outputFile.writeText(stringBuilder.toString())
+        outputFile.writeText(KotlinFileBuilder().buildColors(packageName.get(), projectName.get(), kotlinColors))
     }
 }
 
@@ -156,15 +138,12 @@ abstract class StylesTask : DefaultTask() {
 
     @TaskAction
     fun convertStylesToKotlin() {
-        // Step 1: Parse raw XML
         val parser = RawXmlParser()
         val stylesFile = File(project.projectDir, "src/main/res/values/styles.xml")
+        println("WARNING: ${stylesFile.absolutePath} does not exist.")
         val rawStyles = parser.parseXml(stylesFile)
-
-        // Step 2: Transform raw XML to Kotlin
         val mapper = XmlResourceMapper(projectName.get())
         val kotlinStyles = mapper.transformToKotlinResource(rawStyles).filterIsInstance<KotlinStyleResource>()
-        // Step 3: Write transformed data to file
         val outputDir = File(project.buildDir, "generated/source/kapt/debug/${packageName.get().replace('.', '/')}")
         outputDir.mkdirs()
         val outputFile = File(outputDir, "${projectName.get()}Styles.kt")

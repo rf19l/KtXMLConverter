@@ -146,27 +146,28 @@ class ConvertResourceDirectoryTaskFunctionalTest {
         val expectedStylesOutput = """
             package com.org.newexample
 
+            import androidx.compose.ui.text.font.FontWeight
             import androidx.compose.ui.text.TextStyle
             import com.org.newexample.NewExampleColors
             import com.org.newexample.NewExampleDimens
 
-            import androidx.compose.ui.text.font.FontWeight
-
             object NewExampleStyles {
                 val myStyle = TextStyle(
+                    color = NewExampleColors.textColorPrimary,
                     fontSize = NewExampleDimens.fontSizeLarge,
                     fontWeight = FontWeight.Bold,
-                    color = NewExampleColors.textColorPrimary,
                     lineHeight = NewExampleDimens.lineHeightLarge,
                     letterSpacing = NewExampleDimens.letterSpacingNormal,
                 )
+            
                 val anotherStyle = TextStyle(
+                    color = NewExampleColors.textColorSecondary,
                     fontSize = NewExampleDimens.fontSizeSmall,
                     fontWeight = FontWeight.Italic,
-                    color = NewExampleColors.textColorSecondary,
                     lineHeight = NewExampleDimens.lineHeightSmall,
                     letterSpacing = NewExampleDimens.letterSpacingLarge,
                 )
+            
             }
         """.trimIndent()
 

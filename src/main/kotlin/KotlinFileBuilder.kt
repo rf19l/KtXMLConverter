@@ -35,4 +35,39 @@ class KotlinFileBuilder {
 
         return sb.toString()
     }
+    fun buildDimens(packageName: String, projectName: String, dimens: List<KotlinDimenResource>): String {
+        val sb = StringBuilder()
+
+        sb.appendLine("package $packageName")
+        sb.appendLine()
+        sb.appendLine("import androidx.compose.ui.unit.dp")
+        sb.appendLine("import androidx.compose.ui.unit.sp")
+        sb.appendLine()
+        sb.appendLine("object ${projectName}Dimens {")
+
+        dimens.forEach { dimen ->
+            sb.appendLine("    val ${dimen.name} = ${dimen.getItemValue()}")
+        }
+
+        sb.appendLine("}")
+
+        return sb.toString()
+    }
+
+    fun buildColors(packageName: String, projectName: String, colors: List<KotlinColorResource>): String {
+        val sb = StringBuilder()
+        sb.appendLine("package $packageName")
+        sb.appendLine()
+        sb.appendLine("import androidx.compose.ui.graphics.Color")
+        sb.appendLine()
+        sb.appendLine("object ${projectName}Colors {")
+
+        colors.forEach { color ->
+            sb.appendLine("    val ${color.name} = ${color.getItemValue()}")
+        }
+
+        sb.appendLine("}")
+
+        return sb.toString().trimIndent()
+    }
 }
