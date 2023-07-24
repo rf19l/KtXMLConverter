@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "com.rf.foster.ktxml"
-version ="1.0.10"
+version ="1.1.0"
 
 repositories {
     mavenCentral()
@@ -29,7 +29,7 @@ gradlePlugin {
             displayName = "ktxmlconverter"
             id = "$group"
             description = "A Gradle plugin to convert XML files to Kotlin data objects"
-            implementationClass = "com.rf.foster.ktxml.ktXMLConverter"
+            implementationClass = "com.rf.foster.ktxml.KtXMLConverter"
             tags.set(listOf("testing", "integrationTesting", "compatibility"))
 
         }
