@@ -68,41 +68,37 @@ class RawXmlParser {
 
         for (i in 0 until styleNodes.length) {
             val node = styleNodes.item(i) as Element
-            val name = node.getAttribute("name")
-            val parent = node.getAttribute("parent").takeIf { it.isNotBlank() }
-            val isParentInHierarchy = parent?.let {
-                hierarchyMap[name] = parent
-                isDescendantOfTextStyle(name,parent, parentSet, hierarchyMap).also {
-                    it.takeIf { it }?.let { parentSet.add(parent) }
-                }
-            } ?: true
-            if (node.nodeType == Node.ELEMENT_NODE && isParentInHierarchy) {
-                val style = parseStyle(node)
-                parsedList.add(style)
+            if(node.nodeType == Node.ELEMENT_NODE){
+                processNode(node, parsedList, parentSet, hierarchyMap)
             }
         }
     }
 
+    private fun processNode(node: Element, parsedList: MutableList<XmlResource>, parentSet: MutableSet<String>, hierarchyMap: MutableMap<String, String>){
+        val name = node.getAttribute("name")
+        val parent = node.getAttribute("parent").takeIf { it.isNotBlank() }
+
+        if(isDescendantOfTextStyle(parent, hierarchyMap)) {
+            parent?.let {
+                hierarchyMap[name] = it
+                parentSet.add(it)
+            }
+            parsedList.add(parseStyle(node))
+        }
+    }
+
     private fun isDescendantOfTextStyle(
-        currentElement:String,
         parent: String?,
-        parentSet: MutableSet<String>,
         hierarchy: Map<String, String>,
     ): Boolean {
-        if (parent == null ) return true
-        if(parent == "TextAppearance.AppCompat"){
-            parentSet.add(currentElement)
-            return true
-        }
+        if (parent == null || parent == "TextAppearance.AppCompat") return true
         var currentParent = parent
         while (currentParent in hierarchy) {
-            if (currentParent in parentSet) {
-                return true
-            }
             currentParent = hierarchy[currentParent] ?: break
         }
-        return false
+        return currentParent == "TextAppearance.AppCompat"
     }
+
 
     private fun parseStyle(node: Element): StyleXmlResource {
         val name = node.getAttribute("name")
