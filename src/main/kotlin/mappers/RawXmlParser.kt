@@ -1,12 +1,13 @@
-package com.rf.foster.ktxml.mappers
+package io.github.rf19l.ktxml.mappers
 
-import com.rf.foster.ktxml.models.ColorXmlResource
-import com.rf.foster.ktxml.models.DimenXmlResource
-import com.rf.foster.ktxml.models.StyleXmlResource
-import com.rf.foster.ktxml.models.XmlResource
+import io.github.rf19l.ktxml.models.ColorXmlResource
+import io.github.rf19l.ktxml.models.DimenXmlResource
+import io.github.rf19l.ktxml.models.StyleXmlResource
+import io.github.rf19l.ktxml.models.XmlResource
 import org.w3c.dom.Document
 import org.w3c.dom.Element
 import org.w3c.dom.Node
+import org.w3c.dom.NodeList
 import java.io.File
 import java.io.StringReader
 import javax.xml.parsers.DocumentBuilderFactory
@@ -30,7 +31,7 @@ class RawXmlParser {
     }
 
     private fun parseXmlDocument(doc: Document): List<XmlResource> {
-        val list = mutableListOf<XmlResource>()
+        val parsedList = mutableListOf<XmlResource>()
 
         doc.documentElement.normalize()
 
@@ -38,21 +39,14 @@ class RawXmlParser {
         val colorNodes = doc.getElementsByTagName("color")
         val dimenNodes = doc.getElementsByTagName("dimen")
 
-        for (i in 0 until styleNodes.length) {
-            val node = styleNodes.item(i)
-            if (node.nodeType == Node.ELEMENT_NODE) {
-                val element = node as Element
-                val style = parseStyle(element)
-                list.add(style)
-            }
-        }
+        parseStyles(styleNodes, parsedList)
 
         for (i in 0 until colorNodes.length) {
             val node = colorNodes.item(i)
             if (node.nodeType == Node.ELEMENT_NODE) {
                 val element = node as Element
                 val color = parseColor(element)
-                list.add(color)
+                parsedList.add(color)
             }
         }
 
@@ -61,15 +55,58 @@ class RawXmlParser {
             if (node.nodeType == Node.ELEMENT_NODE) {
                 val element = node as Element
                 val dimen = parseDimen(element)
-                list.add(dimen)
+                parsedList.add(dimen)
             }
         }
 
-        return list
+        return parsedList
+    }
+
+    private fun parseStyles(styleNodes: NodeList, parsedList: MutableList<XmlResource>) {
+        val parentSet = mutableSetOf("TextAppearance.AppCompat")  // keep track of the allowed ancestors
+        val hierarchyMap = mutableMapOf<String, String>() // map each style to its parent
+
+        for (i in 0 until styleNodes.length) {
+            val node = styleNodes.item(i) as Element
+            val name = node.getAttribute("name")
+            val parent = node.getAttribute("parent").takeIf { it.isNotBlank() }
+            val isParentInHierarchy = parent?.let {
+                hierarchyMap[name] = parent
+                isDescendantOfTextStyle(name,parent, parentSet, hierarchyMap).also {
+                    it.takeIf { it }?.let { parentSet.add(parent) }
+                }
+            } ?: true
+            if (node.nodeType == Node.ELEMENT_NODE && isParentInHierarchy) {
+                val style = parseStyle(node)
+                parsedList.add(style)
+            }
+        }
+    }
+
+    private fun isDescendantOfTextStyle(
+        currentElement:String,
+        parent: String?,
+        parentSet: MutableSet<String>,
+        hierarchy: Map<String, String>,
+    ): Boolean {
+        if (parent == null ) return true
+        if(parent == "TextAppearance.AppCompat"){
+            parentSet.add(currentElement)
+            return true
+        }
+        var currentParent = parent
+        while (currentParent in hierarchy) {
+            if (currentParent in parentSet) {
+                return true
+            }
+            currentParent = hierarchy[currentParent] ?: break
+        }
+        return false
     }
 
     private fun parseStyle(node: Element): StyleXmlResource {
         val name = node.getAttribute("name")
+        val parent = node.getAttribute("parent").takeIf { it.isNotBlank() }
         val items = node.getElementsByTagName("item")
         val itemList = mutableListOf<StyleXmlResource.Item>()
 
@@ -84,7 +121,7 @@ class RawXmlParser {
             }
         }
 
-        return StyleXmlResource(name, itemList)
+        return StyleXmlResource(name = name, parent = parent, items = itemList)
     }
 
     private fun parseColor(node: Element): ColorXmlResource {

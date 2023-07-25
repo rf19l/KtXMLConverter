@@ -1,3 +1,5 @@
+package functional
+
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -38,7 +40,7 @@ class DimensTaskFunctionalTest {
 
         buildFile.writeText("""
             plugins {
-                id("com.rf.foster.ktxml")
+                id("io.github.rf19l.ktxml")
             }
             
             ktXMLConverterExtension {
@@ -117,7 +119,7 @@ class DimensTaskFunctionalTest {
 
         buildFile.writeText("""
         plugins {
-            id("com.rf.foster.ktxml")
+            id("io.github.rf19l.ktxml")
         }
         
         ktXMLConverterExtension {

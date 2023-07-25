@@ -1,9 +1,9 @@
-package com.rf.foster.ktxml
+package io.github.rf19l.ktxml
 
-import com.rf.foster.ktxml.tasks.ColorsTask
-import com.rf.foster.ktxml.tasks.ConvertResourceDirectoryTask
-import com.rf.foster.ktxml.tasks.DimensTask
-import com.rf.foster.ktxml.tasks.StylesTask
+import io.github.rf19l.ktxml.tasks.ColorsTask
+import io.github.rf19l.ktxml.tasks.ConvertResourceDirectoryTask
+import io.github.rf19l.ktxml.tasks.DimensTask
+import io.github.rf19l.ktxml.tasks.StylesTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.model.ObjectFactory

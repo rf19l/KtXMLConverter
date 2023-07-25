@@ -1,8 +1,8 @@
-import com.rf.foster.ktxml.mappers.XmlResourceMapper
-import com.rf.foster.ktxml.models.*
-import com.rf.foster.ktxml.models.ColorXmlResource
-import com.rf.foster.ktxml.models.DimenXmlResource
-import com.rf.foster.ktxml.models.StyleXmlResource
+import io.github.rf19l.ktxml.mappers.XmlResourceMapper
+import io.github.rf19l.ktxml.models.ColorXmlResource
+import io.github.rf19l.ktxml.models.DimenXmlResource
+import io.github.rf19l.ktxml.models.StyleXmlResource
+import io.github.rf19l.ktxml.models.*
 import org.gradle.internal.impldep.junit.framework.TestCase.assertEquals
 import org.gradle.internal.impldep.junit.framework.TestCase.assertTrue
 import org.junit.jupiter.api.Test

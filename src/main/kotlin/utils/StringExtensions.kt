@@ -1,4 +1,4 @@
-package com.rf.foster.ktxml.utils
+package io.github.rf19l.ktxml.utils
 
 import java.util.regex.Pattern
 

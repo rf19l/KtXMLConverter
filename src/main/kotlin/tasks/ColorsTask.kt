@@ -1,9 +1,9 @@
-package com.rf.foster.ktxml.tasks
+package io.github.rf19l.ktxml.tasks
 
-import com.rf.foster.ktxml.models.KotlinColorResource
-import com.rf.foster.ktxml.mappers.KotlinFileBuilder
-import com.rf.foster.ktxml.mappers.RawXmlParser
-import com.rf.foster.ktxml.mappers.XmlResourceMapper
+import io.github.rf19l.ktxml.models.KotlinColorResource
+import io.github.rf19l.ktxml.mappers.KotlinFileBuilder
+import io.github.rf19l.ktxml.mappers.RawXmlParser
+import io.github.rf19l.ktxml.mappers.XmlResourceMapper
 import org.gradle.api.DefaultTask
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input

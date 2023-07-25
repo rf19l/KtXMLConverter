@@ -1,11 +1,11 @@
-package com.rf.foster.ktxml.mappers
+package io.github.rf19l.ktxml.mappers
 
-import com.rf.foster.ktxml.models.*
-import com.rf.foster.ktxml.models.ColorXmlResource
-import com.rf.foster.ktxml.models.DimenXmlResource
-import com.rf.foster.ktxml.models.StyleXmlResource
-import com.rf.foster.ktxml.models.XmlResource
-import com.rf.foster.ktxml.utils.toCamelCase
+import io.github.rf19l.ktxml.models.ColorXmlResource
+import io.github.rf19l.ktxml.models.DimenXmlResource
+import io.github.rf19l.ktxml.models.StyleXmlResource
+import io.github.rf19l.ktxml.models.XmlResource
+import io.github.rf19l.ktxml.utils.toCamelCase
+import io.github.rf19l.ktxml.models.*
 
 class XmlResourceMapper(private val projectName: String) {
 

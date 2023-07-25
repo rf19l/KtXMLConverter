@@ -1,6 +1,6 @@
-package com.rf.foster.ktxml.mappers
+package io.github.rf19l.ktxml.mappers
 
-import com.rf.foster.ktxml.models.*
+import io.github.rf19l.ktxml.models.*
 
 class KotlinFileBuilder {
     private fun KotlinResource.getItemValue(): String {

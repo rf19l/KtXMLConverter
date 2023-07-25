@@ -1,8 +1,9 @@
-import com.rf.foster.ktxml.mappers.RawXmlParser
-import com.rf.foster.ktxml.models.ColorXmlResource
-import com.rf.foster.ktxml.models.DimenXmlResource
-import com.rf.foster.ktxml.models.StyleXmlResource
-import org.junit.jupiter.api.Assertions.*
+import io.github.rf19l.ktxml.mappers.RawXmlParser
+import io.github.rf19l.ktxml.models.ColorXmlResource
+import io.github.rf19l.ktxml.models.DimenXmlResource
+import io.github.rf19l.ktxml.models.StyleXmlResource
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import java.io.File
 import java.nio.file.Files
@@ -71,6 +72,50 @@ class RawXmlParserTest {
         assertEquals("#000000", textColorPrimaryResource.hex)
     }
 
+    @Test
+    fun parseStylesFile() {
+        val stylesXml = """
+            <resources>
+                <style name="MyStyle" parent="TextAppearance.AppCompat">
+                    <item name="android:textColor">@color/textColorPrimary</item>
+                    <item name="android:textSize">@dimen/font_size_large</item>
+                    <item name="android:textStyle">bold</item>
+                    <item name="lineHeight">@dimen/line_height_large</item>
+                    <item name="android:letterSpacing">@dimen/letter_spacing_normal</item>
+                </style>
+                <style name="AnotherStyle" parent="TextAppearance.Design.Tab">
+                    <item name="android:textColor">@color/textColorSecondary</item>
+                    <item name="android:textSize">@dimen/font_size_small</item>
+                    <item name="android:textStyle">italic</item>
+                    <item name="lineHeight">@dimen/line_height_small</item>
+                    <item name="android:letterSpacing">@dimen/letter_spacing_large</item>
+                </style>
+            </resources>
+            """
+        val styles = rawXmlParser.parseXml(stylesXml)
+        assertEquals(1, styles.size)
+        val stylesFile = """
+                    <resources>
+                        <style name="TextAppearance.AppCompat.Headline">
+                            <item name="android:textSize">@dimen/text_size_large</item>
+                            <item name="android:textColor">@color/textColorPrimary</item>
+                        </style>
+    
+                        <style name="TextAppearance.AppCompat.Subhead">
+                            <item name="android:textSize">@dimen/text_size_medium</item>
+                            <item name="android:textColor">@color/textColorSecondary</item>
+                        </style>
+    
+                        <style name="TextAppearance.AppCompat.Body1">
+                            <item name="android:textSize">@dimen/text_size_small</item>
+                            <item name="android:textColor">@color/textColorPrimary</item>
+                        </style>
+                    </resources>
+    
+                """.trimIndent()
+
+    }
+
     // Similar test for parseXml File...
     @Test
     fun `parseXml file`() {
@@ -78,34 +123,36 @@ class RawXmlParserTest {
         val stylesFile = File(tempDir, "styles.xml").apply {
             writeText(
                 """
-        <resources>
-            <style name="MyStyle">
-                <item name="android:textColor">@color/textColorPrimary</item>
-                <item name="android:textSize">@dimen/font_size_large</item>
-                <item name="android:textStyle">bold</item>
-                <item name="lineHeight">@dimen/line_height_large</item>
-                <item name="android:letterSpacing">@dimen/letter_spacing_normal</item>
-            </style>
-            <style name="AnotherStyle">
-                <item name="android:textColor">@color/textColorSecondary</item>
-                <item name="android:textSize">@dimen/font_size_small</item>
-                <item name="android:textStyle">italic</item>
-                <item name="lineHeight">@dimen/line_height_small</item>
-                <item name="android:letterSpacing">@dimen/letter_spacing_large</item>
-            </style>
-        </resources>
+    <resources>
+        <style name="Common.Parent.Style" parent="TextAppearance.AppCompat">
+            <item name="android:textColor" />
+        </style>
+        <style name="MyStyle" parent="Common.Parent.Style">
+            <item name="android:textSize">@dimen/font_size_small</item>
+            <item name="android:textStyle">normal</item>
+            <item name="lineHeight">@dimen/line_height_one</item>
+            <item name="android:letterSpacing">@dimen/letter_spacing_normal</item>
+        </style>
+    
+        <style name="TabStyle" parent="TextAppearance.Design.Tab">
+            <item name="android:textSize">@dimen/size_font_size_03</item>
+            <item name="android:textStyle">bold</item>
+            <item name="lineHeight">@dimen/calculated_line_height_default_paragraph_sm_strong</item>
+            <item name="android:letterSpacing">@dimen/size_letter_spacing_normal</item>
+            <item name="tabSelectedTextColor">@color/color_neutral_100</item>
+            <item name="tabTextColor">@color/color_neutral_60</item>
+            <item name="textAllCaps">false</item>
+        </style>
+    
+    </resources>
         """
             )
         }
-
         val resources = rawXmlParser.parseXml(stylesFile)
-
         assertEquals(2, resources.size)
-
         val myStyleResource = resources.find { it is StyleXmlResource && it.name == "MyStyle" } as StyleXmlResource
-        assertTrue(myStyleResource.items.any { it.name == "android:textSize" && it.ref == "@dimen/font_size_large" })
-
-        tempDir.deleteRecursively()  // clean up temp directory
+        assertTrue(myStyleResource.items.any { it.name == "android:textSize" && it.ref == "@dimen/font_size_small" })
+        tempDir.deleteRecursively()
     }
 
     @Test
@@ -142,4 +189,5 @@ class RawXmlParserTest {
 
         tempDir.deleteRecursively()  // clean up temp directory
     }
+
 }

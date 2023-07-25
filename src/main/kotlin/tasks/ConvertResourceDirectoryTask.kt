@@ -1,4 +1,4 @@
-package com.rf.foster.ktxml.tasks
+package io.github.rf19l.ktxml.tasks
 
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction

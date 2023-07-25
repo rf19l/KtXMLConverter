@@ -1,4 +1,4 @@
-package com.rf.foster.ktxml.models
+package io.github.rf19l.ktxml.models
 
 sealed class KotlinResource {
     abstract val name: String

@@ -1,4 +1,4 @@
-import com.rf.foster.ktxml.utils.toCamelCase
+import io.github.rf19l.ktxml.utils.toCamelCase
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
