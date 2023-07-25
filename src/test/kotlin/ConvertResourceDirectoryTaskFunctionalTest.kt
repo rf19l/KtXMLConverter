@@ -125,8 +125,8 @@ class ConvertResourceDirectoryTaskFunctionalTest {
                 val fontSizeSmall = 12.sp
                 val lineHeightLarge = 24.sp
                 val lineHeightSmall = 16.sp
-                val letterSpacingNormal = 0.025f
-                val letterSpacingLarge = 0.05f
+                val letterSpacingNormal = 0.025.sp
+                val letterSpacingLarge = 0.05.sp
             }
         """.trimIndent()
 

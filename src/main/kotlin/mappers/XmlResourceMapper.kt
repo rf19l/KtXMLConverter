@@ -77,8 +77,9 @@ class XmlResourceMapper(private val projectName: String) {
 
     private fun transformDimen(dimen: DimenXmlResource): KotlinDimenResource {
         val (value, unit) = when {
-            dimen.value.endsWith("sp") || dimen.name.contains("letterSpacing") -> Pair(dimen.value.removeSuffix("sp"), ".sp")
+            dimen.value.endsWith("sp") -> Pair(dimen.value.removeSuffix("sp"), ".sp")
             dimen.value.endsWith("dp") -> Pair(dimen.value.removeSuffix("dp"), ".dp")
+            dimen.name.contains("letter_spacing",true) -> Pair(dimen.value, ".sp") // Letter spacing cases are explicitly handled here
             else -> Pair(dimen.value, "f")
         }
         return KotlinDimenResource(dimen.name.toCamelCase(), value, unit)

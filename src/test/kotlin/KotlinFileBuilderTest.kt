@@ -1,6 +1,6 @@
+import com.rf.foster.ktxml.mappers.KotlinFileBuilder
 import com.rf.foster.ktxml.models.KotlinColorResource
 import com.rf.foster.ktxml.models.KotlinDimenResource
-import com.rf.foster.ktxml.mappers.KotlinFileBuilder
 import org.gradle.internal.impldep.junit.framework.TestCase.assertEquals
 import org.junit.jupiter.api.Test
 
@@ -48,6 +48,7 @@ class KotlinFileBuilderTest {
             val textSizeMedium = 16.sp
             val textSizeLarge = 20.sp
             val unitlessMargin = 10f
+            val sizeLetterSpacingNormal = 0.sp
         }
         """.trimIndent()
 
@@ -59,7 +60,8 @@ class KotlinFileBuilderTest {
             KotlinDimenResource(name = "textSizeSmall", value = "12", unit = ".sp"),
             KotlinDimenResource(name = "textSizeMedium", value = "16", unit = ".sp"),
             KotlinDimenResource(name = "textSizeLarge", value = "20", unit = ".sp"),
-            KotlinDimenResource(name = "unitlessMargin", value = "10", unit = "f")
+            KotlinDimenResource(name = "unitlessMargin", value = "10", unit = "f"),
+            KotlinDimenResource(name = "sizeLetterSpacingNormal", value = "0", unit = ".sp"),
         )
     }
 
@@ -68,12 +70,12 @@ class KotlinFileBuilderTest {
     @Test
     fun `test buildColors`() {
         val result = builder.buildColors(packageName, projectName, kotlinColorResourcesInput)
-        assertEquals(expectedColors,result.trim())
+        assertEquals(expectedColors, result.trim())
     }
 
     @Test
     fun `test buildDimens`() {
         val result = builder.buildDimens(packageName, projectName, kotlinDimensResourcesInput)
-       assertEquals(expectedDimens,result.trim(),)
+        assertEquals(expectedDimens, result.trim())
     }
 }

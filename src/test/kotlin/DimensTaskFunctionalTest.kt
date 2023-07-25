@@ -62,6 +62,11 @@ class DimensTaskFunctionalTest {
                     <dimen name="text_size_medium">16sp</dimen>
                     <dimen name="text_size_large">20sp</dimen>
                     <dimen name="unitless_margin">10</dimen>
+                    <dimen name="size_letter_spacing_normal">0</dimen>
+                    <dimen name="size_letter_spacing_tight">-0.0128</dimen>
+                    <dimen name="size_letter_spacing_tighter">-0.0256</dimen>
+                    <dimen name="size_letter_spacing_loose">0.0128</dimen>
+                    <dimen name="size_letter_spacing_looser">0.0256</dimen>
                 </resources>
 
             """.trimIndent()
@@ -78,7 +83,7 @@ class DimensTaskFunctionalTest {
     import androidx.compose.ui.unit.dp
     import androidx.compose.ui.unit.sp
 
-    object ${projectName}Dimens {
+    object ExampleDimens {
         val activityHorizontalMargin = 16.dp
         val activityVerticalMargin = 12.dp
         val appbarPadding = 8.dp
@@ -87,6 +92,11 @@ class DimensTaskFunctionalTest {
         val textSizeMedium = 16.sp
         val textSizeLarge = 20.sp
         val unitlessMargin = 10f
+        val sizeLetterSpacingNormal = 0.sp
+        val sizeLetterSpacingTight = -0.0128.sp
+        val sizeLetterSpacingTighter = -0.0256.sp
+        val sizeLetterSpacingLoose = 0.0128.sp
+        val sizeLetterSpacingLooser = 0.0256.sp
     }
 """.trimIndent()
 

@@ -153,12 +153,13 @@ class ResourceMapperTest {
     @Test
     fun testDimensResourceMapper(){
         val dimens = listOf(
-            DimenXmlResource("fontSizeLarge", "18sp"),
-            DimenXmlResource("fontSizeSmall", "12sp"),
-            DimenXmlResource("lineHeightLarge", "24sp"),
-            DimenXmlResource("lineHeightSmall", "16sp"),
-            DimenXmlResource("letterSpacingNormal", "0.025"),
-            DimenXmlResource("letterSpacingLarge", "0.05")
+            DimenXmlResource("font_size_large", "18sp"),
+            DimenXmlResource("font_size_small", "12sp"),
+            DimenXmlResource("line_height_large", "24sp"),
+            DimenXmlResource("line_height_small", "16sp"),
+            DimenXmlResource("letter_spacing_normal", "0.025"),
+            DimenXmlResource("letter_spacing_large", "0.05"),
+            DimenXmlResource("size_letter_spacing_normal","0")
         )
 
         val projectName = "ProjectName"
@@ -171,7 +172,8 @@ class ResourceMapperTest {
             KotlinDimenResource("lineHeightLarge", "24",".sp"),
             KotlinDimenResource("lineHeightSmall", "16",".sp"),
             KotlinDimenResource("letterSpacingNormal", "0.025",".sp"),
-            KotlinDimenResource("letterSpacingLarge", "0.05",".sp")
+            KotlinDimenResource("letterSpacingLarge", "0.05",".sp"),
+            KotlinDimenResource("sizeLetterSpacingNormal","0",".sp"),
         )
 
         assertEquals(expectedDimens.size, kotlinDimens.size)
