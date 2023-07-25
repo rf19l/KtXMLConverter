@@ -28,10 +28,9 @@ gradlePlugin {
         create("ktxmlconverter") {
             displayName = "ktxmlconverter"
             id = "$group"
-            description = "A Gradle plugin to convert XML files to Kotlin data objects"
+            description = "Gradle plugin to convert Android XML resources into Kotlin objects using Jetpack Compose. Handles dimensions, colors, and styles."
             implementationClass = "io.github.rf19l.ktxml.KtXMLConverter"
-            tags.set(listOf("testing", "integrationTesting", "compatibility"))
-
+            tags.set(listOf("Android", "Kotlin", "JetpackCompose", "XML", "Resources", "Conversion", "GradlePlugin"))
         }
     }
 }
