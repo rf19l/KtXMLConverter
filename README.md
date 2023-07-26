@@ -17,7 +17,7 @@ To use this plugin, you need to include it in your project.
 
 ```kotlin
 plugins {
-    id("com.rf.foster.ktxml.KtXMLConverter") version "x.y.z"
+     id("io.github.rf19l.ktxml")
 }
 ```
 ### Configure The Plugin
