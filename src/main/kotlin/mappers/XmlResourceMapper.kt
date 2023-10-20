@@ -2,10 +2,14 @@ package io.github.rf19l.ktxml.mappers
 
 import io.github.rf19l.ktxml.models.ColorXmlResource
 import io.github.rf19l.ktxml.models.DimenXmlResource
+import io.github.rf19l.ktxml.models.KotlinColorResource
+import io.github.rf19l.ktxml.models.KotlinDimenResource
+import io.github.rf19l.ktxml.models.KotlinLiteralResource
+import io.github.rf19l.ktxml.models.KotlinResource
+import io.github.rf19l.ktxml.models.KotlinStyleResource
 import io.github.rf19l.ktxml.models.StyleXmlResource
 import io.github.rf19l.ktxml.models.XmlResource
 import io.github.rf19l.ktxml.utils.toCamelCase
-import io.github.rf19l.ktxml.models.*
 
 class XmlResourceMapper(private val projectName: String) {
 
@@ -42,7 +46,7 @@ class XmlResourceMapper(private val projectName: String) {
                     } else if (item.ref in listOf("bold", "italic", "normal")) { // handling textStyle
                         KotlinLiteralResource(newName, "FontWeight.${item.ref.capitalize()}")
                     } else {
-                        println("WARNING: Unsupported reference: ${item.ref}")
+                        println("WARNING: Unsupported reference: ${item.ref.ifBlank { "Empty Reference" }}")
                         null
                     }
                 } else {
@@ -55,7 +59,7 @@ class XmlResourceMapper(private val projectName: String) {
                 } else if (item.ref in listOf("bold", "italic", "normal")) { // handling textStyle
                     KotlinLiteralResource(item.name.toCamelCase(), item.ref)
                 } else {
-                    println("WARNING: Unsupported reference: ${item.ref}")
+                    println("WARNING: Unsupported reference: ${item.ref.ifBlank { "Empty Reference" }}")
                     null
                 }
             }

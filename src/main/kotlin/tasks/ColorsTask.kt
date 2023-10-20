@@ -7,6 +7,7 @@ import io.github.rf19l.ktxml.mappers.XmlResourceMapper
 import org.gradle.api.DefaultTask
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
 import java.io.File
 
@@ -17,6 +18,8 @@ abstract class ColorsTask : DefaultTask() {
     @get:Input
     abstract val packageName: Property<String>
 
+    @OutputDirectory
+    val outputDir = File(project.buildDir, "generated/source/kapt/debug/${packageName.get().replace('.', '/')}")
     @TaskAction
     fun convertColors() {
         val parser = RawXmlParser()
