@@ -34,7 +34,7 @@ class KtXMLConverter : Plugin<Project> {
             this.packageName.set(extension.packageName)
         }
 
-        val allTasks = project.tasks.register("konvertXmlResources", ConvertResourceDirectoryTask::class.java) {
+        val allTasks = project.tasks.create("konvertXmlResources", ConvertResourceDirectoryTask::class.java) {
             this.dependsOn(dimensTask, colorsTask, stylesTask)
         }
 
@@ -42,6 +42,7 @@ class KtXMLConverter : Plugin<Project> {
             val preBuildTask = tasks.findByName("preBuild")
             preBuildTask?.dependsOn("konvertXmlResources")
         }
+
     }
 }
 

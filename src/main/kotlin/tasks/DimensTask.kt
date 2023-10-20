@@ -5,8 +5,12 @@ import io.github.rf19l.ktxml.mappers.RawXmlParser
 import io.github.rf19l.ktxml.mappers.XmlResourceMapper
 import io.github.rf19l.ktxml.models.KotlinDimenResource
 import org.gradle.api.DefaultTask
+import org.gradle.api.file.DirectoryProperty
+import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.OutputDirectory
+import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
 import java.io.File
 
@@ -16,6 +20,15 @@ abstract class DimensTask : DefaultTask() {
 
     @get:Input
     abstract val packageName: Property<String>
+
+    @get:OutputFile
+    val outputFile: RegularFileProperty = project.objects.fileProperty().convention(
+        project.layout.buildDirectory.file(
+            project.provider {
+                "generated/source/kapt/debug/${packageName.get().replace('.', '/')}/${projectName.get()}Dimens.kt"
+            }
+        )
+    )
 
     @TaskAction
     fun convertDimensToKotlin() {
@@ -28,10 +41,9 @@ abstract class DimensTask : DefaultTask() {
         val rawDimens = parser.parseXml(dimensFile)
         val mapper = XmlResourceMapper(projectName.get())
         val kotlinDimensionResource = mapper.transformToKotlinResource(rawDimens).filterIsInstance<KotlinDimenResource>()
-        val outputDir = File(project.buildDir, "generated/source/kapt/debug/${packageName.get().replace('.', '/')}")
-        outputDir.mkdirs()
-        val outputFile = File(outputDir, "${projectName.get()}Dimens.kt")
-        outputFile.writeText(KotlinFileBuilder().buildDimens(packageName.get(), projectName.get(), kotlinDimensionResource))
-    }
 
+        outputFile.get().asFile.parentFile.mkdirs()
+
+        outputFile.get().asFile.writeText(KotlinFileBuilder().buildDimens(packageName.get(), projectName.get(), kotlinDimensionResource))
+    }
 }
